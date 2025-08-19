@@ -49,159 +49,35 @@ programa_especial <- fetch_transferegov_resource(
 message("Fim da coleta de programa.")
 
 
-# :: 02.PLANO DE AÇÂO ESPECIAL -------------------------------------------------
+# :: 02-12.RECURSOS ESPECIAIS --------------------------------------------------
 
-message("Coletando planos de ação...")
+recursos_especiais <- tribble(
+  ~start_msg,                                         ~end_msg,                                             ~path_input,          ~path_output,               ~resource,                                      ~key_column,
+  "Coletando planos de ação...",                     "Fim da coleta de planos de ação.",                  PATH_PROGRAMA,       PATH_PLANO_ACAO,           "plano_acao_especial",                         "id_programa",
+  "Coletando empenhos...",                           "Fim da coleta de empenhos...",                     PATH_PLANO_ACAO,     PATH_EMPENHO,              "empenho_especial",                             "id_plano_acao",
+  "Coletando documento hábil...",                    "Fom da coleta de documento hábil.",               PATH_EMPENHO,        PATH_DOCUMENTO_HABIL,      "documento_habil_especial",                    "id_empenho",
+  "Coletando ordem de pagamento - órdem bancária...", "Fim da coleta de ordem de pagamento - órdem bancária.", PATH_DOCUMENTO_HABIL, PATH_ORDEM_PAGAMENTO, "ordem_pagamento_ordem_bancaria_especial",     "id_dh",
+  "Coletando de histórico de pagamento...",          "Fim de coleta de histórico de pagamento.",        PATH_ORDEM_PAGAMENTO,PATH_HISTORICO_PAGAMENTO,  "historico_pagamento_especial",                "id_op_ob",
+  "Coletando de relatório de gestão...",             "Fim de coleta de relatório de gestão.",           PATH_PLANO_ACAO,     PATH_RELATORIO_GESTAO,     "relatorio_gestao_especial",                   "id_plano_acao",
+  "Coletando relatório de gestão (novo)...",        "Fim da coleta de relatório de gestão (novo).",    PATH_PLANO_ACAO,     PATH_RELATORIO_GESTAO_NOVO,"relatorio_gestao_novo_especial",              "id_plano_acao",
+  "Coletando lista de executores...",               "Fim da coleta de lista de executores.",           PATH_PLANO_ACAO,     PATH_EXECUTOR,             "executor_especial",                            "id_plano_acao",
+  "Coletando metas...",                              "Fim da coleta de metas.",                         PATH_EXECUTOR,       PATH_META,                 "meta_especial",                               "id_executor",
+  "Coletando planos de trabalho...",                 "Fim da coleta de planos de trabalho.",            PATH_PLANO_ACAO,     PATH_PLANO_TRABALHO,       "plano_trabalho_especial",                     "id_plano_acao",
+  "Colentando lista de finalidades...",              "Fim da coleta de lista de finalidades.",         PATH_EXECUTOR,       PATH_FINALIDADE,           "finalidade_especial",                         "id_executor"
+)
 
-build_transferegov_params(
-  path_input = PATH_PROGRAMA,
-  path_output = PATH_PLANO_ACAO,
-  resource = "plano_acao_especial",
-  key_column = "id_programa"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de planos de ação.")
-
-
-# :: 03.EMPENHO ESPECIAL -------------------------------------------------------
-
-message("Coletando empenhos...")
-
-build_transferegov_params(
-  path_input = PATH_PLANO_ACAO,
-  path_output = PATH_EMPENHO,
-  resource = "empenho_especial",
-  key_column = "id_plano_acao"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de empenhos...")
-
-
-# :: 04.DOCUMENTO HÁBIL ESPECIAL -----------------------------------------------
-
-message("Coletando documento hábil...")
-
-build_transferegov_params(
-  path_input = PATH_EMPENHO,
-  path_output = PATH_DOCUMENTO_HABIL,
-  resource = "documento_habil_especial",
-  key_column = "id_empenho"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fom da coleta de documento hábil.")
-
-
-# :: 05.ORDEM PAGAMENTO - ORDEM BANCÁRIA ESPECIAL ------------------------------
-
-message("Coletando ordem de pagamento - órdem bancária...")
-
-build_transferegov_params(
-  path_input = PATH_DOCUMENTO_HABIL,
-  path_output = PATH_ORDEM_PAGAMENTO,
-  # resource = "historico_pagamento_especial",
-  resource = "ordem_pagamento_ordem_bancaria_especial",
-  key_column = "id_dh"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de ordem de pagamento - órdem bancária.")
-
-
-# :: 06.HISTÓRICO PAGAMENTO ESPECIAL -------------------------------------------
-
-message("Coletando de histórico de pagamento...")
-
-build_transferegov_params(
-  path_input = PATH_ORDEM_PAGAMENTO,
-  path_output = PATH_HISTORICO_PAGAMENTO,
-  resource = "historico_pagamento_especial",
-  key_column = "id_op_ob"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim de coleta de histórico de pagamento.")
-
-
-# :: 07.RELATÓRIO GESTÃO ESPECIAL ----------------------------------------------
-
-message("Coletando de relatório de gestão...")
-
-build_transferegov_params(
-  path_input = PATH_PLANO_ACAO,
-  path_output = PATH_RELATORIO_GESTAO,
-  resource = "relatorio_gestao_especial",
-  key_column = "id_plano_acao"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim de coleta de relatório de gestão.")
-
-
-# :: 08.RELATÓRIO GESTÃO NOVO ESPECIAL -----------------------------------------
-
-message("Coletando relatório de gestão (novo)...")
-
-build_transferegov_params(
-  path_input = PATH_PLANO_ACAO,
-  path_output = PATH_RELATORIO_GESTAO_NOVO,
-  resource = "relatorio_gestao_novo_especial",
-  key_column = "id_plano_acao"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de relatório de gestão (novo).")
-
-
-# :: 09.EXECUTOR ESPECIAL ------------------------------------------------------
-
-message("Coletando lista de executores...")
-
-build_transferegov_params(
-  path_input = PATH_PLANO_ACAO,
-  path_output = PATH_EXECUTOR,
-  resource = "executor_especial",
-  key_column = "id_plano_acao"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de lista de executores.")
-
-
-# :: 10.META ESPECIAL ----------------------------------------------------------
-
-message("Coletando metas...")
-
-build_transferegov_params(
-  path_input = PATH_EXECUTOR,
-  path_output = PATH_META,
-  resource = "meta_especial",
-  key_column = "id_executor"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de metas.")
-
-
-# :: 11.PLANO TRABALHO ESPECIAL ------------------------------------------------
-
-message("Coletando planos de trabalho...")
-
-build_transferegov_params(
-  path_input = PATH_PLANO_ACAO,
-  path_output = PATH_PLANO_TRABALHO,
-  resource = "plano_trabalho_especial",
-  key_column = "id_plano_acao"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de planos de trabalho.")
-
-
-# :: 12.FINALIDADE ESPECIAL ----------------------------------------------------
-
-message("Colentando lista de finalidades...")
-
-build_transferegov_params(
-  path_input = PATH_EXECUTOR,
-  path_output = PATH_FINALIDADE,
-  resource = "finalidade_especial",
-  key_column = "id_executor"
-) |> pwalk(fetch_transferegov_resource)
-
-message("Fim da coleta de lista de finalidades.")
+recursos_especiais |> pwalk(
+  function(start_msg, end_msg, path_input, path_output, resource, key_column) {
+    message(start_msg)
+    build_transferegov_params(
+      path_input = path_input,
+      path_output = path_output,
+      resource = resource,
+      key_column = key_column
+    ) |> pwalk(fetch_transferegov_resource)
+    message(end_msg)
+  }
+)
 
 
 # :: FIM -----------------------------------------------------------------------
