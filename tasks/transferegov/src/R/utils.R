@@ -17,6 +17,8 @@ request_transferegov_resource <- function(host = "https://api.transferegov.gesta
 
   if (length(params) > 0) req <- req_url_query(req, !!!params)
 
+  Sys.sleep(.15)
+
   return(req)
 }
 
