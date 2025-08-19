@@ -14,7 +14,7 @@ PATH_UTILS <- here("tasks/transferegov/src/R/utils.R")
 source(PATH_UTILS)
 
 # Diretório onde os dados são guardados
-PATH_OUTPUT_DIR <- here("tasks/transferegov/outputs")
+PATH_OUTPUT_DIR <- here("tasks/transferegov/tmp")
 
 # helper
 get_file <- \(dir = PATH_OUTPUT_DIR, file) here(dir, file)
