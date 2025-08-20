@@ -35,3 +35,5 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 .vscode/settings.json
+tasks/transferegov/log/coleta.log
+tasks/transferegov/tmp/05-ordem-pagamento.csv
