@@ -29,32 +29,44 @@ request_transferegov_resource <- function(host = "https://api.transferegov.gesta
 #' @return Um `tibble` com os dados coletados.
 #'
 collect_transferegov_resource <- function(...) {
-  # callback para monitorar o fim da paginação
-  is_complete <- function(resp) {
-    resp <- resp_body_json(resp, simplifyVector = TRUE)
-    resp <- as_tibble(resp)
-    nrow(resp) == 0
-  }
+  tryCatch({
+    # callback para monitorar o fim da paginação
+    is_complete <- function(resp) {
+      resp <- resp_body_json(resp, simplifyVector = TRUE)
+      resp <- as_tibble(resp)
+      nrow(resp) == 0
+    }
 
-  # append de todas as páginas
-  resps_data_as_tibble <- function(resp) {
-    data <- resp_body_json(resp, simplifyVector = TRUE)
-    data <- as_tibble(data)
-  }
+    # append de todas as páginas
+    resps_data_as_tibble <- function(resp) {
+      data <- resp_body_json(resp, simplifyVector = TRUE)
+      data <- as_tibble(data)
+    }
 
-  # requisição e coleta dinâmica dos dados da API
-  request_transferegov_resource(...) |>
-    req_throttle(capacity = 30, fill_time_s = 60) |> # 30 requisições em 60 segundos
-    req_perform_iterative(
-      max_reqs = Inf,
-      next_req = iterate_with_offset(
-        param_name = "offset",
-        start = 0,
-        offset = 1000,
-        resp_complete = is_complete
-      )
-    ) |>
-    resps_data(resps_data_as_tibble)
+    # requisição e coleta dinâmica dos dados da API
+    request_transferegov_resource(...) |>
+      req_retry(max_tries = 3) |>
+      req_throttle(capacity = 30, fill_time_s = 60) |> # 30 requisições em 60 segundos
+      req_perform_iterative(
+        max_reqs = Inf,
+        next_req = iterate_with_offset(
+          param_name = "offset",
+          start = 0,
+          offset = 1000,
+          resp_complete = is_complete
+        )
+      ) |>
+      resps_data(resps_data_as_tibble)
+  }, error = function(e) {
+    if (inherits(e, "httr2_http")) {
+      warning(sprintf("HTTP error: %s", e$message), call. = FALSE, immediate. = TRUE)
+    } else if (inherits(e, "jsonlite_error")) {
+      warning(sprintf("JSON parse error: %s", e$message), call. = FALSE, immediate. = TRUE)
+    } else {
+      warning(sprintf("Unexpected error: %s", e$message), call. = FALSE, immediate. = TRUE)
+    }
+    return(tibble())
+  })
 }
 
 #' Coleta dados da API Transferegov e salva em CSV
@@ -67,23 +79,39 @@ collect_transferegov_resource <- function(...) {
 #' @return Sem retorno. Salva os dados em arquivo.
 #'
 fetch_transferegov_resource <- function(resource, key = list(), perc, path_output) {
-  msg <- sprintf("Key: %s; %s complete", key[[1]], perc)
-  flush.console()
-  cat(msg, "\r")
+  tryCatch({
+    msg <- sprintf("Key: %s; %s complete", key[[1]], perc)
+    flush.console()
+    cat(msg, "\r")
 
-  result <- collect_transferegov_resource(resource = resource, param = key)
+    result <- collect_transferegov_resource(resource = resource, param = key)
 
-  if (nrow(result) > 0) {
-    fwrite(
-      result,
-      path_output,
-      sep = ",",
-      row.names = FALSE,
-      col.names = !file.exists(path_output),
-      append = TRUE,
-      quote = TRUE
+    if (nrow(result) > 0) {
+      fwrite(
+        result,
+        path_output,
+        sep = ",",
+        row.names = FALSE,
+        col.names = !file.exists(path_output),
+        append = TRUE,
+        quote = TRUE
+      )
+    }
+
+    invisible(result)
+  }, error = function(e) {
+    warning(
+      sprintf(
+        "Falha ao coletar '%s' (key: %s): %s",
+        resource,
+        ifelse(length(key) > 0, key[[1]], ""),
+        e$message
+      ),
+      call. = FALSE,
+      immediate. = TRUE
     )
-  }
+    invisible(tibble())
+  })
 }
 
 #' Gera parâmetros para consulta à API Transferegov
