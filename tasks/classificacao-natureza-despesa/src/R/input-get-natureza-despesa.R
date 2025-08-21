@@ -5,14 +5,17 @@ library(tidyverse)
 
 # :: FILEPATHS -----------------------------------------------------------------
 
-TASK_DIR <- "tasks/classificacao-natureza-despesa/outputs"
+INPUT_DIR <- "tasks/classificacao-natureza-despesa/inputs"
 
 # Texto completo
-PATH_TEXTO_COMPLETO <- here(TASK_DIR, "texto-completo-portaria-103-2021.rds")
+PATH_TEXTO_COMPLETO <- here(INPUT_DIR, "texto-completo-portaria-103-2021.rds")
 
 # Anexo III
-PATH_DISCRIMINACAO_NATUREZA_DESPESA <- here(TASK_DIR, "discriminacao-natureza-de-despesas.rds")
-PATH_NATUREZA_DESPESA <- here(TASK_DIR, "natureza-de-despesas.rds")
+PATH_DISCRIMINACAO_NATUREZA_DESPESA <- here(
+  INPUT_DIR,
+  "discriminacao-natureza-de-despesas.rds"
+)
+PATH_NATUREZA_DESPESA <- here(INPUT_DIR, "natureza-de-despesas.rds")
 
 # Dicionario:
 # "https://docs.google.com/spreadsheets/d/1IRAMky8cgDtGMHrpLZyPBD1FFdG5SmclnjoTzxYiABI"
@@ -59,9 +62,13 @@ natureza_despesa <- natureza_despesa |>
     titulo = "NATUREZA DE DESPESA",
     subsecao_i = if_else(str_starts(texto, "(I|II) - "), texto, NA_character_),
     subsecao_ii = if_else(str_starts(texto, "[A-D] - "), texto, NA_character_),
-    subsecao_iii = if_else(str_starts(texto, "[0-9]+\\s?-\\s?"), texto, NA_character_)
+    subsecao_iii = if_else(
+      str_starts(texto, "[0-9]+\\s?-\\s?"),
+      texto,
+      NA_character_
+    )
   ) |>
-  fill(subsecao_i,subsecao_ii, .direction = "down")
+  fill(subsecao_i, subsecao_ii, .direction = "down")
 
 # remove linhas repetitivas
 natureza_despesa <- natureza_despesa |>
@@ -102,7 +109,9 @@ conceitos <- natureza_despesa |>
 
 # exporta pra Gsheets
 enframe(conceitos) |>
-  mutate(salva = map2(value, name, googlesheets4::write_sheet, ss = URL_DICIONARIO))
+  mutate(
+    salva = map2(value, name, googlesheets4::write_sheet, ss = URL_DICIONARIO)
+  )
 
 # exporta para RDS
 natureza_despesa |>
@@ -141,8 +150,11 @@ anexo_iii <- portaria |>
   as_tibble_col(column_name = "texto") |>
   unnest(texto) |>
   mutate(texto = str_squish(texto)) |>
-  filter(!texto  %in% c("", "CODIGO", "DESCRIÇÃO")) |>
-  mutate(codigo = if_else(str_starts(texto, "\\d"), texto, NA_character_), .before = texto) |>
+  filter(!texto %in% c("", "CODIGO", "DESCRIÇÃO")) |>
+  mutate(
+    codigo = if_else(str_starts(texto, "\\d"), texto, NA_character_),
+    .before = texto
+  ) |>
   fill(codigo, .direction = "down") |>
   filter(texto != codigo)
 
