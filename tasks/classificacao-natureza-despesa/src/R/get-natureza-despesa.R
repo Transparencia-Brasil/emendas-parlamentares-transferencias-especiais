@@ -7,6 +7,9 @@ library(tidyverse)
 
 TASK_DIR <- "tasks/classificacao-natureza-despesa/outputs"
 
+# Texto completo
+PATH_TEXTO_COMPLETO <- here(TASK_DIR, "texto-completo-portaria-103-2021.rds")
+
 # Anexo III
 PATH_DISCRIMINACAO_NATUREZA_DESPESA <- here(TASK_DIR, "discriminacao-natureza-de-despesas.rds")
 PATH_NATUREZA_DESPESA <- here(TASK_DIR, "natureza-de-despesas.rds")
@@ -26,7 +29,7 @@ URL_PORTARIA_103_2021 <- "https://www.in.gov.br/en/web/dou/-/portaria-conunta-st
 # ANEXO II ---------------------------------------------------------------------
 
 # Scrap portaria - retorna um texto
-natureza_despesa <- URL_PORTARIA_103_2021 |>
+texto_completo <- URL_PORTARIA_103_2021 |>
   request() |>
   req_perform() |>
   resp_body_html(encoding = "utf-8") |>
@@ -34,16 +37,19 @@ natureza_despesa <- URL_PORTARIA_103_2021 |>
   xml2::xml_text()
 
 # Atribui tabularidade ao texto
-natureza_despesa <- natureza_despesa |>
+texto_completo_tabulado <- texto_completo |>
   str_split("\n") |>
   as_tibble_col(column_name = "texto") |>
   unnest(texto) |>
   mutate(texto = str_squish(texto))
 
 # Filtra o anexo II do texto
-natureza_despesa <- natureza_despesa |>
+natureza_despesa <- texto_completo_tabulado |>
   filter(texto != "") |>
-  mutate(secao = if_else(str_starts(texto, "ANEXO"), texto, NA_character_), .before = texto) |>
+  mutate(
+    secao = if_else(str_starts(texto, "ANEXO"), texto, NA_character_),
+    .before = texto
+  ) |>
   fill(secao, .direction = "down") |>
   filter(secao == "ANEXO II")
 
@@ -82,9 +88,17 @@ natureza_despesa <- natureza_despesa |>
 conceitos <- natureza_despesa |>
   filter(subsecao_i == "II - DOS CONCEITOS E ESPECIFICAÇÕES") |>
   select(subsecao_ii, subsecao_iii, conceito = paragrafo) |>
-  nest_by(subsecao_ii) |>
+  nest(.by = subsecao_ii) |>
   deframe() |>
-  map(~ separate(.x, subsecao_iii, c("codigo", "descricao"), "\\s?- ", extra = "merge"))
+  map(
+    ~ separate(
+      .x,
+      subsecao_iii,
+      c("codigo", "descricao"),
+      "\\s?- ",
+      extra = "merge"
+    )
+  )
 
 # exporta pra Gsheets
 enframe(conceitos) |>
@@ -93,10 +107,23 @@ enframe(conceitos) |>
 # exporta para RDS
 natureza_despesa |>
   filter(subsecao_i == "II - DOS CONCEITOS E ESPECIFICAÇÕES") |>
-  select(subsecao_ii, subsecao_iii, conceito = paragrafo) |>
-  nest_by(subsecao_ii) |>
+  select(
+    categoria_de_despesa = subsecao_ii,
+    subsecao_iii,
+    conceito = paragrafo
+  ) |>
+  separate(
+    col = subsecao_iii,
+    into = c("codigo_descricao", "descricao"),
+    sep = "\\s?-\\s?",
+    extra = "merge"
+  ) |>
+  nest(.by = categoria_de_despesa) |>
+  deframe() |>
   saveRDS(PATH_NATUREZA_DESPESA)
 
+# Salva texto completo
+saveRDS(texto_completo, PATH_TEXTO_COMPLETO)
 
 # ANEXO III --------------------------------------------------------------------
 
