@@ -51,20 +51,103 @@ message("Fim da coleta de programa.")
 
 # :: 02-12.RECURSOS ESPECIAIS --------------------------------------------------
 
-recursos_especiais <- tribble(
-  ~start_msg,                                         ~end_msg,                                             ~path_input,          ~path_output,               ~resource,                                      ~key_column,
-  "Coletando planos de ação...",                     "Fim da coleta de planos de ação.",                  PATH_PROGRAMA,       PATH_PLANO_ACAO,           "plano_acao_especial",                         "id_programa",
-  "Coletando empenhos...",                           "Fim da coleta de empenhos...",                     PATH_PLANO_ACAO,     PATH_EMPENHO,              "empenho_especial",                             "id_plano_acao",
-  "Coletando documento hábil...",                    "Fom da coleta de documento hábil.",               PATH_EMPENHO,        PATH_DOCUMENTO_HABIL,      "documento_habil_especial",                    "id_empenho",
-  "Coletando ordem de pagamento - órdem bancária...", "Fim da coleta de ordem de pagamento - órdem bancária.", PATH_DOCUMENTO_HABIL, PATH_ORDEM_PAGAMENTO, "ordem_pagamento_ordem_bancaria_especial",     "id_dh",
-  "Coletando de histórico de pagamento...",          "Fim de coleta de histórico de pagamento.",        PATH_ORDEM_PAGAMENTO,PATH_HISTORICO_PAGAMENTO,  "historico_pagamento_especial",                "id_op_ob",
-  "Coletando de relatório de gestão...",             "Fim de coleta de relatório de gestão.",           PATH_PLANO_ACAO,     PATH_RELATORIO_GESTAO,     "relatorio_gestao_especial",                   "id_plano_acao",
-  "Coletando relatório de gestão (novo)...",        "Fim da coleta de relatório de gestão (novo).",    PATH_PLANO_ACAO,     PATH_RELATORIO_GESTAO_NOVO,"relatorio_gestao_novo_especial",              "id_plano_acao",
-  "Coletando lista de executores...",               "Fim da coleta de lista de executores.",           PATH_PLANO_ACAO,     PATH_EXECUTOR,             "executor_especial",                            "id_plano_acao",
-  "Coletando metas...",                              "Fim da coleta de metas.",                         PATH_EXECUTOR,       PATH_META,                 "meta_especial",                               "id_executor",
-  "Coletando planos de trabalho...",                 "Fim da coleta de planos de trabalho.",            PATH_PLANO_ACAO,     PATH_PLANO_TRABALHO,       "plano_trabalho_especial",                     "id_plano_acao",
-  "Colentando lista de finalidades...",              "Fim da coleta de lista de finalidades.",         PATH_EXECUTOR,       PATH_FINALIDADE,           "finalidade_especial",                         "id_executor"
+# Vetores individuais
+start_msg <- c(
+  "Coletando planos de ação...",
+  "Coletando empenhos...",
+  "Coletando documento hábil...",
+  "Coletando ordem de pagamento...",
+  "Coletando de histórico de pagamento...",
+  "Coletando de relatório de gestão...",
+  "Coletando relatório de gestão (novo)...",
+  "Coletando lista de executores...",
+  "Coletando metas...",
+  "Coletando planos de trabalho...",
+  "Colentando lista de finalidades..."
 )
+
+end_msg <- c(
+  "Fim da coleta de planos de ação.",
+  "Fim da coleta de empenhos...",
+  "Fom da coleta de documento hábil.",
+  "Fim da coleta de ordem de pagamento.",
+  "Fim de coleta de histórico de pagamento.",
+  "Fim de coleta de relatório de gestão.",
+  "Fim da coleta de relatório de gestão (novo).",
+  "Fim da coleta de lista de executores.",
+  "Fim da coleta de metas.",
+  "Fim da coleta de planos de trabalho.",
+  "Fim da coleta de lista de finalidades."
+)
+
+path_input <- c(
+  PATH_PROGRAMA,
+  PATH_PLANO_ACAO,
+  PATH_EMPENHO,
+  PATH_DOCUMENTO_HABIL,
+  PATH_ORDEM_PAGAMENTO,
+  PATH_PLANO_ACAO,
+  PATH_PLANO_ACAO,
+  PATH_PLANO_ACAO,
+  PATH_EXECUTOR,
+  PATH_PLANO_ACAO,
+  PATH_EXECUTOR
+)
+
+path_output <- c(
+  PATH_PLANO_ACAO,
+  PATH_EMPENHO,
+  PATH_DOCUMENTO_HABIL,
+  PATH_ORDEM_PAGAMENTO,
+  PATH_HISTORICO_PAGAMENTO,
+  PATH_RELATORIO_GESTAO,
+  PATH_RELATORIO_GESTAO_NOVO,
+  PATH_EXECUTOR,
+  PATH_META,
+  PATH_PLANO_TRABALHO,
+  PATH_FINALIDADE
+)
+
+resource <- c(
+  "plano_acao_especial",
+  "empenho_especial",
+  "documento_habil_especial",
+  "ordem_pagamento_ordem_bancaria_especial",
+  "historico_pagamento_especial",
+  "relatorio_gestao_especial",
+  "relatorio_gestao_novo_especial",
+  "executor_especial",
+  "meta_especial",
+  "plano_trabalho_especial",
+  "finalidade_especial"
+)
+
+key_column <- c(
+  "id_programa",
+  "id_plano_acao",
+  "id_empenho",
+  "id_dh",
+  "id_op_ob",
+  "id_plano_acao",
+  "id_plano_acao",
+  "id_plano_acao",
+  "id_executor",
+  "id_plano_acao",
+  "id_executor"
+)
+
+# Montando a tibble final
+recursos_especiais <- tibble::tibble(
+  start_msg,
+  end_msg,
+  path_input,
+  path_output,
+  resource,
+  key_column
+)
+
+recursos_especiais
+
 
 recursos_especiais |> pwalk(
   function(start_msg, end_msg, path_input, path_output, resource, key_column) {
