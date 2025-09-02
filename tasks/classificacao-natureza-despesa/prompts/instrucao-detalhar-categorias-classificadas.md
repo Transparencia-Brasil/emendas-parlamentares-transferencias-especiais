@@ -95,8 +95,8 @@ Analise **cada linha** e crie **um novo campo**:
 | categoria                     | objeto_executor                    | desc_meta                       | categoria_detalhe          |
 |-------------------------------|------------------------------------|---------------------------------|----------------------------|
 | Obra/instalação               | Construção de Centro de Saúde      | Construir 1 UBS                 | "Construção unidades saúde"|
-| Equipamentos/material permanente | Aquisição de equipamentos hospitalares | Comprar 5 respiradores          | "Equipamentos médicos"     |
-| Serviços                      | Contratação de serviços de engenharia | Elaborar projeto executivo      | "Serviços engenharia"      |
+| Equipamentos/material permanente | Aquisição de equipamentos hospitalares | Comprar 5 respiradores   | "Equipamentos médicos"     |
+| Serviços                      | Contratação de serviços de engenharia | Elaborar projeto executivo   | "Serviços engenharia"      |
 | Material de consumo           | Distribuição de medicamentos       | Fornecer medicamentos básicos   | "Medicamentos básicos"     |
 | Não identificado              | Apoio ao desenvolvimento           | Ações de fortalecimento         | "Apoio genérico"           |
 
