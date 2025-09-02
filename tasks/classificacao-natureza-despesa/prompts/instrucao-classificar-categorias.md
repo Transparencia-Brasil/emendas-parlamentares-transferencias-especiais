@@ -50,7 +50,7 @@ Analise **cada linha** da planilha e crie **um novo campo**:
 
 - **`categoria`** → classificação principal (1 a 5):
   1. Obra/instalação
-  2. Equipamentos/mat. permanente
+  2. Equipamentos/material permanente
   3. Serviços
   4. Material de consumo
   5. Não identificado
@@ -62,7 +62,7 @@ Analise **cada linha** da planilha e crie **um novo campo**:
 Construções, reformas, ampliações, pavimentação, instalações físicas.
 **Ex.:** Construção de escola, Reforma de UBS, Pavimentação asfáltica.
 
-### 2. Equipamentos/mat. permanente
+### 2. Equipamentos/material permanente
 
 Bens duráveis, máquinas, veículos, mobiliário, equipamentos hospitalares.
 **Ex.:** Ambulâncias, Equipamentos odontológicos, Computadores.
