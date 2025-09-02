@@ -106,7 +106,7 @@ Objetos ou metas com descrições vagas, incompletas ou que não se enquadram cl
 
 - Use sempre a interpretação mais comum no contexto de emendas parlamentares
 - Seja consistente nas classificações semelhantes
-- Em caso de dúvida entre duas categorias específicas, priorize a leitura do objeto principal
+- Em caso de dúvida entre duas categorias específicas, priorize a leitura do objeto principal (`objeto_executor` e `desc_meta`)
 - **Quando não houver informações suficientes para classificação precisa, utilize sempre a categoria 5 (Não identificado)**
 - Descrições muito genéricas devem ser classificadas como "Não identificado"
 
