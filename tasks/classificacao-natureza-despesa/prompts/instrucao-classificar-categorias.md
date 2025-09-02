@@ -91,11 +91,6 @@ Objetos ou metas com descrições vagas, incompletas ou que não se enquadram cl
   - Consumo → suprir, abastecer, distribuir (bens não duráveis)
   - Não identificado → apoio, desenvolvimento, outras, genérico, inespecífico
 
-- **Durabilidade**:
-  - Permanente (> 2 anos) → classificar como equipamento ou obra
-  - Consumo imediato (< 2 anos) → classificar como material de consumo
-  - Indefinida ou não especificada → classificar como não identificado
-
 - **Natureza da despesa**:
   - Investimento → obras e bens permanentes
   - Custeio → serviços e material de consumo
