@@ -58,7 +58,7 @@ programa |>
 transferegov$plano_acao |>
   filter(id_programa == "23") |>
   mutate(across(starts_with("valor"), as.numeric)) |>
-  googlesheets4::write_sheet(GSHEET, sheet = "Plano de ação")
+  googlesheets4::write_sheet(GSHEET, sheet = "Plano de ação - emendas")
 
 
 # :: EXECUTORES ----------------------------------------------------------------
