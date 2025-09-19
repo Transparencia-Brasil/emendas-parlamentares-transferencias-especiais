@@ -41,3 +41,6 @@ tasks/transferegov/tmp/05-ordem-pagamento.csv
 .vscode/*
 /.quarto/
 tasks/langgraph-learning
+
+# R plot files
+Rplots.pdf
