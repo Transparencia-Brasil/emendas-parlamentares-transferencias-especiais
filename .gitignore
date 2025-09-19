@@ -40,4 +40,4 @@ tasks/transferegov/tmp/05-ordem-pagamento.csv
 .quarto/*
 .vscode/*
 /.quarto/
-tasks/langgraph-learning/*
+tasks/langgraph-learning
