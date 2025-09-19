@@ -13,9 +13,11 @@ PATH_EMENDAS_GPT <- here("tasks/analise-classificacoes-gpt5/inputs/emendas-gpt.x
 # :: LOAD DATA -----------------------------------------------------------------
 
 emendas_gpt <- readxl::read_excel(PATH_EMENDAS_GPT) |>
-  janitor::clean_names()
-  emendas_gpt |>
-    count(classificacao_detalhamento_objeto, classificacao_justifificativa, sort = TRUE) |>
+  janitor::clean_names() |>
+  rename(classificacao_justificativa = classificacao_justifificativa)
+
+emendas_gpt |>
+    count(classificacao_detalhamento_objeto, classificacao_justificativa, sort = TRUE) |>
     gt() |>
     tab_header(
       title = "Contagem das Classificações das Emendas",
@@ -29,7 +31,7 @@ emendas_gpt <- readxl::read_excel(PATH_EMENDAS_GPT) |>
     ) |>
     cols_label(
       classificacao_detalhamento_objeto = "Detalhamento do Objeto",
-      classificacao_justifificativa = "Justificativa",
+      classificacao_justificativa = "Justificativa",
       n = "Quantidade"
     ) |>
     opt_row_striping()
@@ -39,7 +41,7 @@ emendas_gpt |>
   summarise(
     .by = c(
       id_plano_acao, id_plano_trabalho, id_executor,
-      classificacao_detalhamento_objeto, classificacao_justifificativa
+      classificacao_detalhamento_objeto, classificacao_justificativa
     ),
     qtd_metas = n()
   ) |>
@@ -50,7 +52,7 @@ emendas_gpt |>
 
 
 # 1. Distribuição de classificacao_detalhamento_objeto
-dados %>%
+emendas_gpt %>%
   count(classificacao_detalhamento_objeto, sort = TRUE) %>%
   ggplot(aes(x = reorder(classificacao_detalhamento_objeto, n), y = n)) +
   geom_bar(stat = "identity") +
@@ -58,22 +60,22 @@ dados %>%
   labs(title = "Distribuição do Detalhamento do Objeto", x = "Detalhamento", y = "Frequência")
 
 # 2. Frequência das justificativas
-dados %>%
+emendas_gpt %>%
   count(classificacao_justificativa, sort = TRUE) %>%
-  head(10) %>%
   ggplot(aes(x = reorder(classificacao_justificativa, n), y = n)) +
   geom_bar(stat = "identity") +
   coord_flip() +
   labs(title = "Top 10 Justificativas", x = "Justificativa", y = "Frequência")
 
 # 3. Estatísticas do elemento_despesa_estimado
-summary(dados$elemento_despesa_estimado)
-ggplot(dados, aes(x = elemento_despesa_estimado)) +
-  geom_histogram(bins = 30, fill = "blue", color = "white") +
+summary(emendas_gpt$elemento_despesa_estimado)
+
+ggplot(emendas_gpt, aes(x = elemento_despesa_estimado)) +
+  geom_histogram(bins = 30, fill = "blue", color = "white", stat="count") +
   labs(title = "Distribuição do Elemento de Despesa Estimado", x = "Valor Estimado", y = "Frequência")
 
 # 4. Proporção de categoria_macro
-dados %>%
+emendas_gpt %>%
   count(categoria_macro) %>%
   mutate(prop = n / sum(n)) %>%
   ggplot(aes(x = reorder(categoria_macro, prop), y = prop)) +
@@ -82,7 +84,7 @@ dados %>%
   labs(title = "Proporção das Categorias Macro", x = "Categoria Macro", y = "Proporção")
 
 # 5. Despesa estimada por categoria_macro
-dados %>%
+emendas_gpt %>%
   group_by(categoria_macro) %>%
   summarise(media_despesa = mean(elemento_despesa_estimado, na.rm = TRUE)) %>%
   ggplot(aes(x = reorder(categoria_macro, media_despesa), y = media_despesa)) +
