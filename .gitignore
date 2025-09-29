@@ -44,3 +44,4 @@ tasks/langgraph-learning
 
 # R plot files
 Rplots.pdf
+tasks/transferegov/outputs/old/*
