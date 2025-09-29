@@ -46,6 +46,16 @@ programa_especial <- fetch_transferegov_resource(
   PATH_PROGRAMA
 )
 
+programa_especial |>
+  filter(ano_programa == "2025") |>
+  fwrite(
+    PATH_PROGRAMA,
+    sep = ",",
+    row.names = FALSE,
+    append = FALSE,
+    quote = TRUE
+  )
+
 message("Fim da coleta de programa.")
 
 
@@ -69,7 +79,7 @@ start_msg <- c(
 end_msg <- c(
   "Fim da coleta de planos de ação.",
   "Fim da coleta de empenhos...",
-  "Fom da coleta de documento hábil.",
+  "Fim da coleta de documento hábil.",
   "Fim da coleta de ordem de pagamento.",
   "Fim de coleta de histórico de pagamento.",
   "Fim de coleta de relatório de gestão.",
@@ -137,7 +147,7 @@ key_column <- c(
 )
 
 # Montando a tibble final
-recursos_especiais <- tibble::tibble(
+recursos_especiais <- tibble(
   start_msg,
   end_msg,
   path_input,

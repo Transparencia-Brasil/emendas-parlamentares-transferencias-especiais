@@ -65,7 +65,7 @@ collect_transferegov_resource <- function(...) {
     } else {
       warning(sprintf("Unexpected error: %s", e$message), call. = FALSE, immediate. = TRUE)
     }
-    return(tibble())
+    tibble()
   })
 }
 
