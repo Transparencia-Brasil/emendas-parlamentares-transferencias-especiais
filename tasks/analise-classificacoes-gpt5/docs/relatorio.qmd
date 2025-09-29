@@ -1,0 +1,426 @@
+---
+title: "Validação das Classificações GPT-5 nas Emendas Parlamentares"
+author: "Raul Durlo"
+date: "09-19-2025"
+date-format: "D.MMM.YYYY"
+date-modified: "last-modified"
+lang: pt-BR
+repo: true
+crossref:
+  fig-prefix: "Gráfico" # (default is "Figure")
+  tbl-title: "Tabela" # (default is "Table")
+  title-delim: "—" # (default is ":")
+format:
+  html:
+    grid:
+      sidebar-width: 300px
+      body-width: 1000px
+    other-links:
+      - text: Mais relatórios
+        icon: file-bar-graph
+        href: https://transparencia-brasil.github.io/emendas-parlamentares-transferencias-especiais/
+      - text: Repositório no GitHub
+        icon: github
+        href: https://github.com/Transparencia-Brasil/emendas-parlamentares-transferencias-especiais
+    html-math-method: katex
+    anchor-sections: true
+    code-fold: true
+    code-tools: true
+    code-link: true
+    code-background: true
+    code-summary: "Código"
+    toc: true
+    toc-title: "Índice"
+    toc-depth: 5
+    toc-float: false
+    toc-collapsed: false
+    footnotes-hover: true
+    smooth-scroll: true
+    fig-width: 9
+    fig-height: 8
+    fig-cap-location: top
+    tbl-cap-location: top
+    search: true
+    embed-resources: true
+    theme:
+      light: cosmo
+      dark: darkly
+knitr:
+  opts_chunk:
+    collapse: true
+    message: false
+    warning: false
+    comment: "#>"
+editor_options:
+  chunk_output_type: console
+execute:
+  cache: false
+---
+
+```{r}
+#| label: setup e dados
+
+options(width = 150)
+library(tidyverse)
+library(here)
+library(gt)
+
+# source(here("setup/use-postgres.R"), encoding = "utf-8")
+source(here("setup/rsetup.R"), encoding = "utf-8")
+
+PATH_EMENDAS_GPT <- here("tasks/analise-classificacoes-gpt5/inputs/emendas-gpt.xlsx")
+PATH_TABLES <- list.files(here("tasks/transferegov/outputs"), pattern = "csv$", full.names = TRUE)
+
+```
+
+```{r}
+#| label: metas
+read_transferegov_csvs <- \(x) {
+  ids <- basename(x) |>
+    snakecase::to_snake_case() |>
+    str_remove("^\\d+_") |>
+    str_remove("_csv$") |>
+    str_remove("_especial$")
+  x |>
+    map(read_csv, col_types = cols(.default = col_character())) |>
+    set_names(ids)
+}
+
+transferegov <- read_transferegov_csvs(PATH_TABLES)
+
+metas <- transferegov$plano_acao |>
+  filter(id_programa == "23") |>
+  distinct(id_plano_acao) |>
+  inner_join(transferegov$executor) |>
+  distinct(id_executor) |>
+  inner_join(transferegov$meta) |>
+  mutate(across(starts_with("vl_"), as.numeric)) |>
+  mutate(across(starts_with("qt_"), as.numeric))
+
+meta <- metas |>
+  rowwise() |>
+  transmute(
+    id_executor,
+    id_meta,
+    sequencial_meta,
+    vl_custeio = vl_custeio_emenda_especial_meta,
+    vl_investimento = vl_investimento_emenda_especial_meta,
+    vl_total = vl_custeio + vl_investimento
+  )
+```
+
+```{r}
+#| label: emendas
+emendas_gpt <- readxl::read_excel(PATH_EMENDAS_GPT, col_types = "text") |>
+  janitor::clean_names() |>
+  mutate(
+    id_meta = str_remove(id_meta, "0$"),
+    sequencial_meta = str_remove(sequencial_meta, "0$")
+  )
+```
+
+
+## Dados das Emendas Classificadas
+
+```{r}
+emendas_gpt |>
+filter(id_plano_acao %in% c("76888", "79197", "76436", "80284")) |>
+  select(chave, id_meta, sequencial_meta, everything()) |>
+  select(
+    -id_plano_acao, -id_executor, -id_plano_trabalho, -classificacao_orcamentaria_pt,
+    -situacao_plano_trabalho
+    ) |>
+  slice(1:100) |>
+  gt() |>
+  opt_interactive(
+    active = TRUE,
+    use_pagination = TRUE,
+    use_pagination_info = TRUE,
+    use_sorting = TRUE,
+    use_search = FALSE,
+    use_filters = FALSE,
+    use_resizers = TRUE,
+    use_highlight = FALSE,
+    use_compact_mode = FALSE,
+    use_text_wrapping = TRUE,
+    use_page_size_select = FALSE,
+    page_size_default = 10,
+    page_size_values = c(10, 25, 50, 100),
+    height = "auto",
+    selection_mode = NULL
+  ) |>
+  opt_row_striping()
+```
+
+## Contagem das Classificações
+
+```{r}
+
+# :: CONTAGEM GERAL DAS CLASSIFICAÇÕES -----------------------------------------
+
+emendas_gpt |>
+  count(classificacao_detalhamento_objeto, classificacao_justificativa, sort = TRUE) |>
+  gt() |>
+  tab_header(
+    title = "Contagem das Classificações das Emendas",
+    subtitle = "Detalhamento do objeto e justificativa"
+  ) |>
+  fmt_number(
+    columns = n,
+    sep_mark = ".",
+    dec_mark = ",",
+    decimals = 0
+  ) |>
+  cols_label(
+    classificacao_detalhamento_objeto = "Detalhamento do Objeto",
+    classificacao_justificativa = "Justificativa",
+    n = "Quantidade"
+  ) |>
+  opt_row_striping()
+```
+
+## Valores Totais por Classificação
+
+```{r}
+# :: VALOR TOTAL DAS EMENDAS POR CLASSIFICAÇÃO ---------------------------------
+
+
+emendas_gpt |>
+  left_join(meta) |>
+  summarise(
+    vl_custeio = sum(vl_custeio, na.rm = TRUE),
+    vl_investimento = sum(vl_investimento, na.rm = TRUE),
+    vl_total = sum(vl_total, na.rm = TRUE),
+    .by = c(classificacao_detalhamento_objeto, classificacao_justificativa)
+  ) |>
+  gt() |>
+  tab_header(
+    title = "Valor Total das Emendas por Classificação",
+    subtitle = "Soma dos valores por detalhamento e justificativa"
+  ) |>
+  fmt_number(
+    columns = c(vl_custeio, vl_investimento, vl_total),
+    sep_mark = ".",
+    dec_mark = ",",
+    decimals = 0
+  ) |>
+  cols_label(
+    classificacao_detalhamento_objeto = "Detalhamento do Objeto",
+    classificacao_justificativa = "Justificativa",
+    vl_custeio = "Valor Custeio",
+    vl_investimento = "Valor Investimento",
+    vl_total = "Valor Total"
+  ) |>
+  opt_row_striping()
+```
+
+
+## Resumo por Plano de Ação
+
+```{r}
+# :: SUMMARY BY PLAN -----------------------------------------------------------
+
+resumo_por_plano <- emendas_gpt |>
+  filter(id_plano_acao %in% c("76888", "79197", "76436", "80284")) |>
+  summarise(
+    .by = c(
+      chave,
+      classificacao_detalhamento_objeto, classificacao_justificativa
+    ),
+    qtd_metas = n()
+  ) |>
+  group_by(chave) |>
+  mutate(
+    total_metas = sum(qtd_metas),
+    perc_metas = qtd_metas / total_metas
+  ) |>
+  ungroup()
+
+
+resumo_por_plano |>
+  select(chave, classificacao_detalhamento_objeto, classificacao_justificativa, qtd_metas, total_metas, perc_metas) |>
+  gt(groupname_col = "chave") |>
+  tab_header(
+    title = "Resumo por Plano de Ação",
+    subtitle = "Distribuição das metas por detalhamento e justificativa"
+  ) |>
+  fmt_number(
+    columns = c(qtd_metas, total_metas, perc_metas),
+    decimals = 0,
+    sep_mark = ".",
+    dec_mark = ","
+  ) |>
+  fmt_percent(
+    columns = perc_metas,
+    decimals = 1
+  ) |>
+  cols_label(
+    chave = "Chave",
+    classificacao_detalhamento_objeto = "Detalhamento do Objeto",
+    classificacao_justificativa = "Justificativa",
+    qtd_metas = "Qtd. Metas",
+    total_metas = "Total Metas",
+    perc_metas = "% Metas"
+  ) |>
+  opt_row_striping() |>
+  opt_table_outline() |>
+  tab_options(
+    table.font.size = "14px",
+    heading.background.color = "#F5F5F5"
+  ) |>
+  tab_style(
+    style = cell_text(indent = px(48)),
+    locations = cells_body(columns = "classificacao_detalhamento_objeto")
+  )
+```
+
+```{r}
+
+resumo_por_plano <- emendas_gpt |>
+  filter(id_plano_acao %in% c("76888", "79197", "76436", "80284")) |>
+  summarise(
+    .by = c(
+      chave,
+      classificacao_detalhamento_objeto, classificacao_justificativa
+    ),
+    qtd_metas = n()
+  ) |>
+  group_by(chave) |>
+  mutate(
+    total_metas = sum(qtd_metas),
+    perc_metas = qtd_metas / total_metas
+  ) |>
+  ungroup()
+
+  emendas_gpt |>
+    filter(id_plano_acao %in% c("76888", "79197", "76436", "80284")) |>
+    left_join(meta) |>
+    summarise(
+      .by = c(
+        chave,
+        classificacao_detalhamento_objeto, classificacao_justificativa
+      ),
+      qtd_metas = n(),
+      vl_total = sum(vl_total, na.rm = TRUE)
+    ) |>
+    group_by(chave) |>
+    mutate(
+      valor_total_metas = sum(vl_total),
+      perc_valor = vl_total / valor_total_metas
+    )  |>
+    ungroup() |>
+    select(
+      chave, classificacao_detalhamento_objeto, classificacao_justificativa,
+      qtd_metas, vl_total, valor_total_metas, perc_valor
+    ) |>
+    gt(groupname_col = "chave") |>
+    tab_header(
+      title = "Resumo de Valores por Plano de Ação",
+      subtitle = "Distribuição dos valores das metas por detalhamento e justificativa"
+    ) |>
+    fmt_number(
+      columns = c(vl_total, valor_total_metas),
+      decimals = 0,
+      sep_mark = ".",
+      dec_mark = ","
+    ) |>
+    fmt_percent(
+      columns = perc_valor,
+      decimals = 1
+    ) |>
+    cols_label(
+      chave = "Chave",
+      classificacao_detalhamento_objeto = "Detalhamento do Objeto",
+      classificacao_justificativa = "Justificativa",
+      qtd_metas = "Qtd. Metas",
+      vl_total = "Valor Total",
+      valor_total_metas = "Valor Total do Plano",
+      perc_valor = "% do Valor"
+    ) |>
+    opt_row_striping() |>
+    opt_table_outline() |>
+    tab_options(
+      table.font.size = "14px",
+      heading.background.color = "#F5F5F5",
+      column_labels.background.color = "#E9ECEF"
+    ) |>
+    tab_style(
+      style = cell_text(indent = px(48)),
+      locations = cells_body(columns = "classificacao_detalhamento_objeto")
+    ) |>
+    tab_style(
+      style = cell_text(weight = "bold", color = "#2C3E50"),
+      locations = cells_column_labels(everything())
+    )
+
+
+
+```
+
+## Categorias macro
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+  emendas_gpt |>
+    left_join(meta) |>
+    summarise(
+      .by = categoria_macro,
+      vl_investimento = sum(vl_investimento, na.rm = TRUE),
+      vl_custeio = sum(vl_custeio, na.rm = TRUE)
+    ) |>
+    pivot_longer(
+      cols = c(vl_investimento, vl_custeio),
+      names_to = "tipo_valor",
+      values_to = "valor"
+    ) |>
+    mutate(tipo_valor = case_when(
+      tipo_valor == "vl_investimento" ~ "Investimento",
+      tipo_valor == "vl_custeio" ~ "Custeio",
+      TRUE ~ tipo_valor
+    )) |>
+    mutate(
+      categoria_macro = if_else(categoria_macro == "Equipamentos/material permanente", "Equipamentos (Mat. perm.)", categoria_macro),
+      categoria_macro = fct_reorder(categoria_macro, valor, sum)
+    ) |>
+    ggplot(aes(x = categoria_macro, y = valor/1e9, fill = tipo_valor)) +
+    geom_col(position = "dodge") +
+    scale_y_continuous(labels = scales::label_number(big.mark = ".", decimal.mark = ",", suffix = "Bi")) +
+    labs(
+      title = "Valores Totais por Categoria Macro",
+      subtitle = "Distribuição dos valores de custeio e investimento por categoria macro",
+      x = "Categoria Macro",
+      y = "Valor (em bilhoes de R$)",
+      fill = "Tipo de Valor"
+    ) +
+    theme(panel.grid.major.x = element_line()) +
+    coord_flip()
+```
+
+## Elementos de Despesa
+
+```{r}
+#| fig-width: 10
+#| fig-height: 15
+  emendas_gpt |>
+    left_join(meta) |>
+    summarise(
+      .by = elemento_despesa_estimado,
+      valor = sum(vl_total, na.rm = TRUE)
+    ) |>
+    mutate(
+      elemento_despesa_estimado = fct_reorder(elemento_despesa_estimado, valor, sum)
+    ) |>
+    ggplot(aes(x = elemento_despesa_estimado, y = valor/1e9)) +
+    geom_col(position = "dodge") +
+    scale_y_continuous(labels = scales::label_number(big.mark = ".", decimal.mark = ",", suffix = "Bi")) +
+    labs(
+      title = "Valores Totais por Elemento de Despesa",
+      subtitle = "Distribuição dos valores de custeio e investimento por elemento de despesa",
+      x = "Elemento de Despesa Estimado",
+      y = "Valor (em bilhoes de R$)",
+      fill = "Tipo de Valor"
+    ) +
+    theme(panel.grid.major.x = element_line()) +
+    coord_flip()
+```

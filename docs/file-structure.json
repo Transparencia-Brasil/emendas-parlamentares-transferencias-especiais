@@ -1,0 +1,12 @@
+{
+  ".": [
+    {
+      "path": "index.html"
+    }
+  ],
+  "tasks/analise-classificacoes-gpt5/docs": [
+    {
+      "path": "tasks/analise-classificacoes-gpt5/docs/relatorio.html"
+    }
+  ]
+}
