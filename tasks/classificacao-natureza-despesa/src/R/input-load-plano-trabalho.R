@@ -104,7 +104,6 @@ metas <- plano_acao |>
 plano_trabalho <- plano_acao |>
   distinct(id_plano_acao) |>
   inner_join(transferegov$plano_trabalho) |>
-  glimpse()
   select(
     id_plano_acao, id_plano_trabalho, situacao_plano_trabalho,
     prazo_execucao_meses_plano_trabalho, classificacao_orcamentaria_pt
@@ -123,7 +122,7 @@ finalidades <- executores |>
 plano_acao # 10.145 linhas
 plano_trabalho # 9.747 linhas
 executores # 9.753 linhas
-metas # 17.236 linhas
+metas # 23.273 linhas
 # finalidades # 10.349 linhas
 
 # RELAÇÕES:
@@ -138,6 +137,7 @@ emendas <- plano_acao |>
 emendas <- left_join(emendas, metas)
 
 write_csv(emendas, PATH_EMENDAS_DETALHADAS)
+glimpse(emendas)
 
 
 # :: LOAD CATEGORIAS DE DESPESA ------------------------------------------------
@@ -209,3 +209,75 @@ dicionario_emendas <- tribble(
 
 # Visualizar o dicionário
 View(dicionario_emendas)
+
+emendas |>
+  transmute(
+    id_plano_acao,
+    id_plano_trabalho,
+    id_executor,
+    CHAVE = sprintf(
+      "%s-%s-%s",
+      id_plano_acao,
+      id_plano_trabalho,
+      id_executor
+    ),
+    situacao_plano_trabalho,
+    classificacao_orcamentaria_pt,
+    id_meta,
+    sequencial_meta,
+    nome_executor,
+    objeto_executor,
+    desc_meta,
+    un_medida_meta,
+    qt_unidade_meta = qt_uniade_meta
+  ) |>
+  write_csv(here(OUTPUT_DIR, "emendas-resumo.csv"))
+
+
+emendas <- emendas |>
+  transmute(
+    id_plano_acao,
+    id_plano_trabalho,
+    id_executor,
+    CHAVE = sprintf(
+      "%s-%s-%s",
+      id_plano_acao,
+      id_plano_trabalho,
+      id_executor
+    ),
+    situacao_plano_trabalho,
+    classificacao_orcamentaria_pt,
+    id_meta,
+    sequencial_meta,
+    nome_executor,
+    objeto_executor,
+    desc_meta,
+    un_medida_meta,
+    qt_unidade_meta = qt_uniade_meta
+  )
+
+glimpse(emendas)
+
+meta_concatenada <- emendas |>
+  transmute(
+    CHAVE,
+    desc_meta = sprintf("\"%s\": %s - (%s %s)", sequencial_meta, desc_meta, qt_unidade_meta, un_medida_meta)
+  ) |>
+  nest(.by = CHAVE) |>
+  mutate(
+    data = map(data, pull, desc_meta),
+    data = map(data, unique),
+    data = map_chr(data, paste, collapse = "; ")
+  )
+
+emendas_complementos <- emendas |>
+  select(
+    -id_plano_acao, -id_plano_trabalho, -id_executor, -id_meta, -sequencial_meta,
+    -desc_meta, -un_medida_meta, -qt_unidade_meta
+  ) |>
+  distinct() |>
+  glimpse()
+
+
+emendas <- left_join(emendas_complementos, meta_concatenada)
+write_csv(emendas, here(OUTPUT_DIR, "emendas-resumo-concatenada-setembro-2025.csv"))
