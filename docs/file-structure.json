@@ -8,5 +8,10 @@
     {
       "path": "tasks/analise-classificacoes-gpt5/docs/relatorio.html"
     }
+  ],
+  "tasks/analise-exploratoria/docs": [
+    {
+      "path": "tasks/analise-exploratoria/docs/00-totalizacoes.html"
+    }
   ]
 }

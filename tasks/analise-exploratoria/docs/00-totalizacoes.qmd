@@ -1,0 +1,180 @@
+---
+title: "Análise exploratória - Totalizações"
+author: "Raul Durlo"
+date: "09-19-2025"
+date-format: "D.MMM.YYYY"
+date-modified: "last-modified"
+lang: pt-BR
+repo: true
+crossref:
+  fig-prefix: "Gráfico" # (default is "Figure")
+  tbl-title: "Tabela" # (default is "Table")
+  title-delim: "—" # (default is ":")
+format:
+  html:
+    grid:
+      sidebar-width: 300px
+      body-width: 1000px
+    other-links:
+      - text: Mais relatórios
+        icon: file-bar-graph
+        href: https://transparencia-brasil.github.io/emendas-parlamentares-transferencias-especiais/
+      - text: Repositório no GitHub
+        icon: github
+        href: https://github.com/Transparencia-Brasil/emendas-parlamentares-transferencias-especiais
+    html-math-method: katex
+    anchor-sections: true
+    code-fold: true
+    code-tools: true
+    code-link: true
+    code-background: true
+    code-summary: "Código"
+    toc: true
+    toc-title: "Índice"
+    toc-depth: 5
+    toc-float: false
+    toc-collapsed: false
+    footnotes-hover: true
+    smooth-scroll: true
+    fig-width: 9
+    fig-height: 8
+    fig-cap-location: top
+    tbl-cap-location: top
+    search: true
+    embed-resources: true
+    theme:
+      light: cosmo
+      dark: darkly
+knitr:
+  opts_chunk:
+    collapse: true
+    message: false
+    warning: false
+    comment: "#>"
+editor_options:
+  chunk_output_type: console
+execute:
+  cache: false
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(here)
+library(gt)
+
+PATH_SETUP <- "setup/rsetup.R"
+source(here(PATH_SETUP))
+
+INPUT_DIR <- "tasks/analise-exploratoria/inputs"
+OUTPUT_DIR <- "tasks/analise-exploratoria/outputs"
+
+
+PATH_MINI_TRANSFEREGOV <- here(INPUT_DIR, "mini-transferegov.rds")
+```
+
+
+## Totalizações - Planos de Ação
+
+```{r}
+emendas <- read_rds(PATH_MINI_TRANSFEREGOV)
+
+emendas |>
+  distinct(id_plano_acao, valor_custeio_plano_acao, valor_investimento_plano_acao) |>
+  summarise(
+    qtd_plano_acao = n(),
+    total_valor = sum(valor_custeio_plano_acao, valor_investimento_plano_acao, na.rm = TRUE),
+    valor_custeio = sum(valor_custeio_plano_acao, na.rm = TRUE),
+    valor_investimento = sum(valor_investimento_plano_acao, na.rm = TRUE)
+    ) |>
+    gt() |>
+    cols_label(
+    qtd_plano_acao = "Quantidade de Planos de Ação",
+    total_valor = "Valor Total (R$)",
+    valor_custeio = "Valor de Custeio (R$)",
+    valor_investimento = "Valor de Investimento (R$)"
+    ) |>
+    fmt_number_brl(
+      columns = qtd_plano_acao,
+      decimals = 0
+    ) |>
+    fmt_number_brl(
+      columns = c(total_valor, valor_custeio, valor_investimento),
+      decimals = 2,
+      # suffixing = c(" mil", " Mi", " Bi", " Tri")
+    )
+```
+
+## Totalizações - Executores
+
+```{r}
+
+PATH_EXECUTORES_SITE <- here("tasks/analise-exploratoria/inputs/executores-site.xlsx")
+
+# executores_site <- readxl::read_excel(PATH_EXECUTORES_SITE)  |>
+#   janitor::clean_names()
+
+# executores <- transferegov$executor |>
+#   mutate(across(starts_with("vl_"), as.numeric))
+
+# count(executores_site, wt = valor_custeio)
+# count(executores, wt = vl_custeio_executor)
+
+# executores_site |>
+#   transmute(
+#     id_plano_acao = str_remove(codigo_plano_acao, "^.+-0*"),
+#     cnpj_executor,
+#     objeto_executor,
+#     valor_custeio_excel = valor_custeio,
+#     valor_investimento_excel = valor_investimento,
+#     excel = TRUE
+#   ) |>
+#   left_join(
+#     executores |>
+#       transmute(
+#         id_plano_acao,
+#         cnpj_executor,
+#         objeto_executor,
+#         valor_custeio_api = vl_custeio_executor,
+#         valor_investimento_api = vl_investimento_executor,
+#         api = TRUE
+#       )
+#   ) |>
+#   mutate(
+#     api = replace_na(api, FALSE),
+#     total = excel + api
+#   ) |>
+#   mutate(
+#     diferenca_custeio = round(replace_na(valor_custeio_excel, 0) - replace_na(valor_custeio_api, 0), 2),
+#     diferenca_investimento = round(replace_na(valor_investimento_excel, 0) - replace_na(valor_investimento_api, 0), 2)
+#   ) |>
+#   filter(diferenca_custeio != 0 | diferenca_investimento != 0) |>
+#   View()
+
+
+
+
+emendas |>
+  distinct(id_executor, vl_custeio_executor, vl_investimento_executor) |>
+  summarise(
+    qtd_plano_acao = n_distinct(id_executor),
+    total_valor = sum(vl_custeio_executor, vl_investimento_executor, na.rm = TRUE),
+    valor_custeio = sum(vl_custeio_executor, na.rm = TRUE),
+    valor_investimento = sum(vl_investimento_executor, na.rm = TRUE)
+    ) |>
+    gt() |>
+    cols_label(
+    qtd_plano_acao = "Quantidade de Executores Únicos",
+    total_valor = "Valor Total (R$)",
+    valor_custeio = "Valor de Custeio (R$)",
+    valor_investimento = "Valor de Investimento (R$)"
+    ) |>
+    fmt_number_brl(
+      columns = qtd_plano_acao,
+      decimals = 0
+    ) |>
+    fmt_number_brl(
+      columns = c(total_valor, valor_custeio, valor_investimento),
+      decimals = 2
+    )
+```
