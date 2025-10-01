@@ -2366,7 +2366,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Data de Modificação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">30.set.2025</p>
+      <p class="date-modified">1.out.2025</p>
     </div>
   </div>
     
@@ -2400,38 +2400,41 @@ vertical-align: -.125em;
 <span>    total_valor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">valor_custeio_plano_acao</span>, <span class="va">valor_investimento_plano_acao</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    valor_custeio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">valor_custeio_plano_acao</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    valor_investimento <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">valor_investimento_plano_acao</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://gt.rstudio.com/reference/gt.html">gt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://gt.rstudio.com/reference/cols_label.html">cols_label</a></span><span class="op">(</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://gt.rstudio.com/reference/gt.html">gt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://gt.rstudio.com/reference/tab_header.html">tab_header</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">&quot;**Totalizações - Planos de Ação**&quot;</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://gt.rstudio.com/reference/cols_label.html">cols_label</a></span><span class="op">(</span></span>
 <span>    qtd_plano_acao <span class="op">=</span> <span class="st">&quot;Quantidade de Planos de Ação&quot;</span>,</span>
 <span>    total_valor <span class="op">=</span> <span class="st">&quot;Valor Total (R$)&quot;</span>,</span>
 <span>    valor_custeio <span class="op">=</span> <span class="st">&quot;Valor de Custeio (R$)&quot;</span>,</span>
 <span>    valor_investimento <span class="op">=</span> <span class="st">&quot;Valor de Investimento (R$)&quot;</span></span>
-<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">fmt_number_brl</span><span class="op">(</span></span>
-<span>      columns <span class="op">=</span> <span class="va">qtd_plano_acao</span>,</span>
-<span>      decimals <span class="op">=</span> <span class="fl">0</span></span>
-<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">fmt_number_brl</span><span class="op">(</span></span>
-<span>      columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">total_valor</span>, <span class="va">valor_custeio</span>, <span class="va">valor_investimento</span><span class="op">)</span>,</span>
-<span>      decimals <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>      <span class="co"># suffixing = c(&quot; mil&quot;, &quot; Mi&quot;, &quot; Bi&quot;, &quot; Tri&quot;)</span></span>
-<span>    <span class="op">)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">fmt_number_brl</span><span class="op">(</span></span>
+<span>    columns <span class="op">=</span> <span class="va">qtd_plano_acao</span>,</span>
+<span>    decimals <span class="op">=</span> <span class="fl">0</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">fmt_number_brl</span><span class="op">(</span></span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">total_valor</span>, <span class="va">valor_custeio</span>, <span class="va">valor_investimento</span><span class="op">)</span>,</span>
+<span>    decimals <span class="op">=</span> <span class="fl">2</span></span>
+<span>    <span class="co"># suffixing = c(&quot; mil&quot;, &quot; Mi&quot;, &quot; Bi&quot;, &quot; Tri&quot;)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<div id="dnjxgktfjs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dnjxgktfjs table {
+<div id="zansodhjbt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zansodhjbt table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#dnjxgktfjs thead, #dnjxgktfjs tbody, #dnjxgktfjs tfoot, #dnjxgktfjs tr, #dnjxgktfjs td, #dnjxgktfjs th {
+#zansodhjbt thead, #zansodhjbt tbody, #zansodhjbt tfoot, #zansodhjbt tr, #zansodhjbt td, #zansodhjbt th {
 border-style: none;
 }
-#dnjxgktfjs p {
+#zansodhjbt p {
 margin: 0;
 padding: 0;
 }
-#dnjxgktfjs .gt_table {
+#zansodhjbt .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -2456,11 +2459,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_caption {
+#zansodhjbt .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#dnjxgktfjs .gt_title {
+#zansodhjbt .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -2471,7 +2474,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#dnjxgktfjs .gt_subtitle {
+#zansodhjbt .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -2482,7 +2485,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#dnjxgktfjs .gt_heading {
+#zansodhjbt .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -2493,12 +2496,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_bottom_border {
+#zansodhjbt .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_col_headings {
+#zansodhjbt .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -2512,7 +2515,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_col_heading {
+#zansodhjbt .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -2531,7 +2534,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#dnjxgktfjs .gt_column_spanner_outer {
+#zansodhjbt .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -2542,13 +2545,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#dnjxgktfjs .gt_column_spanner_outer:first-child {
+#zansodhjbt .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#dnjxgktfjs .gt_column_spanner_outer:last-child {
+#zansodhjbt .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#dnjxgktfjs .gt_column_spanner {
+#zansodhjbt .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -2559,10 +2562,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#dnjxgktfjs .gt_spanner_row {
+#zansodhjbt .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#dnjxgktfjs .gt_group_heading {
+#zansodhjbt .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -2587,7 +2590,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#dnjxgktfjs .gt_empty_group_heading {
+#zansodhjbt .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -2601,13 +2604,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#dnjxgktfjs .gt_from_md > :first-child {
+#zansodhjbt .gt_from_md > :first-child {
 margin-top: 0;
 }
-#dnjxgktfjs .gt_from_md > :last-child {
+#zansodhjbt .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#dnjxgktfjs .gt_row {
+#zansodhjbt .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -2625,7 +2628,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#dnjxgktfjs .gt_stub {
+#zansodhjbt .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -2637,7 +2640,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#dnjxgktfjs .gt_stub_row_group {
+#zansodhjbt .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -2650,13 +2653,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#dnjxgktfjs .gt_row_group_first td {
+#zansodhjbt .gt_row_group_first td {
 border-top-width: 2px;
 }
-#dnjxgktfjs .gt_row_group_first th {
+#zansodhjbt .gt_row_group_first th {
 border-top-width: 2px;
 }
-#dnjxgktfjs .gt_summary_row {
+#zansodhjbt .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -2665,14 +2668,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#dnjxgktfjs .gt_first_summary_row {
+#zansodhjbt .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_first_summary_row.thick {
+#zansodhjbt .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#dnjxgktfjs .gt_last_summary_row {
+#zansodhjbt .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -2681,7 +2684,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_grand_summary_row {
+#zansodhjbt .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -2690,7 +2693,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#dnjxgktfjs .gt_first_grand_summary_row {
+#zansodhjbt .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -2699,7 +2702,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_last_grand_summary_row_top {
+#zansodhjbt .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -2708,10 +2711,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_striped {
+#zansodhjbt .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#dnjxgktfjs .gt_table_body {
+#zansodhjbt .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -2719,7 +2722,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_footnotes {
+#zansodhjbt .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -2732,7 +2735,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_footnote {
+#zansodhjbt .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -2740,7 +2743,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#dnjxgktfjs .gt_sourcenotes {
+#zansodhjbt .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -2753,74 +2756,79 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#dnjxgktfjs .gt_sourcenote {
+#zansodhjbt .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#dnjxgktfjs .gt_left {
+#zansodhjbt .gt_left {
 text-align: left;
 }
-#dnjxgktfjs .gt_center {
+#zansodhjbt .gt_center {
 text-align: center;
 }
-#dnjxgktfjs .gt_right {
+#zansodhjbt .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#dnjxgktfjs .gt_font_normal {
+#zansodhjbt .gt_font_normal {
 font-weight: normal;
 }
-#dnjxgktfjs .gt_font_bold {
+#zansodhjbt .gt_font_bold {
 font-weight: bold;
 }
-#dnjxgktfjs .gt_font_italic {
+#zansodhjbt .gt_font_italic {
 font-style: italic;
 }
-#dnjxgktfjs .gt_super {
+#zansodhjbt .gt_super {
 font-size: 65%;
 }
-#dnjxgktfjs .gt_footnote_marks {
+#zansodhjbt .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#dnjxgktfjs .gt_asterisk {
+#zansodhjbt .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#dnjxgktfjs .gt_indent_1 {
+#zansodhjbt .gt_indent_1 {
 text-indent: 5px;
 }
-#dnjxgktfjs .gt_indent_2 {
+#zansodhjbt .gt_indent_2 {
 text-indent: 10px;
 }
-#dnjxgktfjs .gt_indent_3 {
+#zansodhjbt .gt_indent_3 {
 text-indent: 15px;
 }
-#dnjxgktfjs .gt_indent_4 {
+#zansodhjbt .gt_indent_4 {
 text-indent: 20px;
 }
-#dnjxgktfjs .gt_indent_5 {
+#zansodhjbt .gt_indent_5 {
 text-indent: 25px;
 }
-#dnjxgktfjs .katex-display {
+#zansodhjbt .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#dnjxgktfjs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zansodhjbt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="gt_col_headings header">
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border"><strong>Totalizações - Planos de Ação</strong></th>
+</tr>
+<tr class="gt_col_headings even">
 <th id="qtd_plano_acao" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Quantidade de Planos de Ação</th>
 <th id="total_valor" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor Total (R$)</th>
 <th id="valor_custeio" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor de Custeio (R$)</th>
 <th id="valor_investimento" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor de Investimento (R$)</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody class="gt_table_body"><tr class="odd">
 <td class="gt_row gt_right" headers="qtd_plano_acao">10.145</td>
 <td class="gt_row gt_right" headers="total_valor">6.994.172.321,73</td>
@@ -2833,53 +2841,31 @@ height: 0px !important;
 </div>
 </section><section id="totalizações---executores" class="level2"><h2 class="anchored" data-anchor-id="totalizações---executores">Totalizações - Executores</h2>
 <div class="cell">
-<details class="code-fold"><summary>Código</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
+<details class="code-fold"><summary>Duplicidades nos executores</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Existem duas observações de executores que são duplicadas</span></span>
+<span></span>
 <span><span class="va">PATH_EXECUTORES_SITE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">&quot;tasks/analise-exploratoria/inputs/executores-site.xlsx&quot;</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># executores_site &lt;- readxl::read_excel(PATH_EXECUTORES_SITE)  |&gt;</span></span>
-<span><span class="co">#   janitor::clean_names()</span></span>
+<span><span class="va">executores_site</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">PATH_EXECUTORES_SITE</span><span class="op">)</span>  <span class="op">|&gt;</span></span>
+<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html">clean_names</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># executores &lt;- transferegov$executor |&gt;</span></span>
-<span><span class="co">#   mutate(across(starts_with(&quot;vl_&quot;), as.numeric))</span></span>
+<span><span class="va">executores</span> <span class="op">&lt;-</span> <span class="va">transferegov</span><span class="op">$</span><span class="va">executor</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">&quot;vl_&quot;</span><span class="op">)</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># count(executores_site, wt = valor_custeio)</span></span>
-<span><span class="co"># count(executores, wt = vl_custeio_executor)</span></span>
+<span><span class="va">executores_site</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id_plano_acao <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span><span class="op">(</span><span class="va">codigo_plano_acao</span>, <span class="st">&quot;^.+-0*&quot;</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">id_plano_acao</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">&quot;79888&quot;</span>, <span class="st">&quot;76494&quot;</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co"># executores_site |&gt;</span></span>
-<span><span class="co">#   transmute(</span></span>
-<span><span class="co">#     id_plano_acao = str_remove(codigo_plano_acao, &quot;^.+-0*&quot;),</span></span>
-<span><span class="co">#     cnpj_executor,</span></span>
-<span><span class="co">#     objeto_executor,</span></span>
-<span><span class="co">#     valor_custeio_excel = valor_custeio,</span></span>
-<span><span class="co">#     valor_investimento_excel = valor_investimento,</span></span>
-<span><span class="co">#     excel = TRUE</span></span>
-<span><span class="co">#   ) |&gt;</span></span>
-<span><span class="co">#   left_join(</span></span>
-<span><span class="co">#     executores |&gt;</span></span>
-<span><span class="co">#       transmute(</span></span>
-<span><span class="co">#         id_plano_acao,</span></span>
-<span><span class="co">#         cnpj_executor,</span></span>
-<span><span class="co">#         objeto_executor,</span></span>
-<span><span class="co">#         valor_custeio_api = vl_custeio_executor,</span></span>
-<span><span class="co">#         valor_investimento_api = vl_investimento_executor,</span></span>
-<span><span class="co">#         api = TRUE</span></span>
-<span><span class="co">#       )</span></span>
-<span><span class="co">#   ) |&gt;</span></span>
-<span><span class="co">#   mutate(</span></span>
-<span><span class="co">#     api = replace_na(api, FALSE),</span></span>
-<span><span class="co">#     total = excel + api</span></span>
-<span><span class="co">#   ) |&gt;</span></span>
-<span><span class="co">#   mutate(</span></span>
-<span><span class="co">#     diferenca_custeio = round(replace_na(valor_custeio_excel, 0) - replace_na(valor_custeio_api, 0), 2),</span></span>
-<span><span class="co">#     diferenca_investimento = round(replace_na(valor_investimento_excel, 0) - replace_na(valor_investimento_api, 0), 2)</span></span>
-<span><span class="co">#   ) |&gt;</span></span>
-<span><span class="co">#   filter(diferenca_custeio != 0 | diferenca_investimento != 0) |&gt;</span></span>
-<span><span class="co">#   View()</span></span>
+<span><span class="va">executores</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">id_executor</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">&quot;37359&quot;</span>, <span class="st">&quot;37349&quot;</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span></span>
-<span></span>
-<span><span class="va">emendas</span> <span class="op">|&gt;</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">executores_site</span>, wt <span class="op">=</span> <span class="va">valor_custeio</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">executores</span>, wt <span class="op">=</span> <span class="va">vl_custeio_executor</span><span class="op">)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Código</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">emendas</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">id_executor</span>, <span class="va">vl_custeio_executor</span>, <span class="va">vl_investimento_executor</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
 <span>    qtd_plano_acao <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">id_executor</span><span class="op">)</span>,</span>
@@ -2894,6 +2880,9 @@ height: 0px !important;
 <span>    valor_custeio <span class="op">=</span> <span class="st">&quot;Valor de Custeio (R$)&quot;</span>,</span>
 <span>    valor_investimento <span class="op">=</span> <span class="st">&quot;Valor de Investimento (R$)&quot;</span></span>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://gt.rstudio.com/reference/tab_header.html">tab_header</a></span><span class="op">(</span></span>
+<span>      title <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">&quot;**Totalizações - Executores**&quot;</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">fmt_number_brl</span><span class="op">(</span></span>
 <span>      columns <span class="op">=</span> <span class="va">qtd_plano_acao</span>,</span>
 <span>      decimals <span class="op">=</span> <span class="fl">0</span></span>
@@ -2903,20 +2892,20 @@ height: 0px !important;
 <span>      decimals <span class="op">=</span> <span class="fl">2</span></span>
 <span>    <span class="op">)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<div id="kmpzthccbr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#kmpzthccbr table {
+<div id="soefyflbvx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#soefyflbvx table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#kmpzthccbr thead, #kmpzthccbr tbody, #kmpzthccbr tfoot, #kmpzthccbr tr, #kmpzthccbr td, #kmpzthccbr th {
+#soefyflbvx thead, #soefyflbvx tbody, #soefyflbvx tfoot, #soefyflbvx tr, #soefyflbvx td, #soefyflbvx th {
 border-style: none;
 }
-#kmpzthccbr p {
+#soefyflbvx p {
 margin: 0;
 padding: 0;
 }
-#kmpzthccbr .gt_table {
+#soefyflbvx .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -2941,11 +2930,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#kmpzthccbr .gt_caption {
+#soefyflbvx .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#kmpzthccbr .gt_title {
+#soefyflbvx .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -2956,7 +2945,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#kmpzthccbr .gt_subtitle {
+#soefyflbvx .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -2967,7 +2956,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#kmpzthccbr .gt_heading {
+#soefyflbvx .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -2978,12 +2967,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#kmpzthccbr .gt_bottom_border {
+#soefyflbvx .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#kmpzthccbr .gt_col_headings {
+#soefyflbvx .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -2997,7 +2986,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#kmpzthccbr .gt_col_heading {
+#soefyflbvx .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3016,7 +3005,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#kmpzthccbr .gt_column_spanner_outer {
+#soefyflbvx .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3027,13 +3016,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#kmpzthccbr .gt_column_spanner_outer:first-child {
+#soefyflbvx .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#kmpzthccbr .gt_column_spanner_outer:last-child {
+#soefyflbvx .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#kmpzthccbr .gt_column_spanner {
+#soefyflbvx .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3044,10 +3033,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#kmpzthccbr .gt_spanner_row {
+#soefyflbvx .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#kmpzthccbr .gt_group_heading {
+#soefyflbvx .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3072,7 +3061,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#kmpzthccbr .gt_empty_group_heading {
+#soefyflbvx .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3086,13 +3075,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#kmpzthccbr .gt_from_md > :first-child {
+#soefyflbvx .gt_from_md > :first-child {
 margin-top: 0;
 }
-#kmpzthccbr .gt_from_md > :last-child {
+#soefyflbvx .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#kmpzthccbr .gt_row {
+#soefyflbvx .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3110,7 +3099,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#kmpzthccbr .gt_stub {
+#soefyflbvx .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3122,7 +3111,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#kmpzthccbr .gt_stub_row_group {
+#soefyflbvx .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3135,13 +3124,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#kmpzthccbr .gt_row_group_first td {
+#soefyflbvx .gt_row_group_first td {
 border-top-width: 2px;
 }
-#kmpzthccbr .gt_row_group_first th {
+#soefyflbvx .gt_row_group_first th {
 border-top-width: 2px;
 }
-#kmpzthccbr .gt_summary_row {
+#soefyflbvx .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3150,14 +3139,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#kmpzthccbr .gt_first_summary_row {
+#soefyflbvx .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#kmpzthccbr .gt_first_summary_row.thick {
+#soefyflbvx .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#kmpzthccbr .gt_last_summary_row {
+#soefyflbvx .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3166,7 +3155,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#kmpzthccbr .gt_grand_summary_row {
+#soefyflbvx .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3175,7 +3164,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#kmpzthccbr .gt_first_grand_summary_row {
+#soefyflbvx .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3184,7 +3173,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#kmpzthccbr .gt_last_grand_summary_row_top {
+#soefyflbvx .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3193,10 +3182,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#kmpzthccbr .gt_striped {
+#soefyflbvx .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#kmpzthccbr .gt_table_body {
+#soefyflbvx .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3204,7 +3193,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#kmpzthccbr .gt_footnotes {
+#soefyflbvx .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3217,7 +3206,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#kmpzthccbr .gt_footnote {
+#soefyflbvx .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3225,7 +3214,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#kmpzthccbr .gt_sourcenotes {
+#soefyflbvx .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3238,79 +3227,84 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#kmpzthccbr .gt_sourcenote {
+#soefyflbvx .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#kmpzthccbr .gt_left {
+#soefyflbvx .gt_left {
 text-align: left;
 }
-#kmpzthccbr .gt_center {
+#soefyflbvx .gt_center {
 text-align: center;
 }
-#kmpzthccbr .gt_right {
+#soefyflbvx .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#kmpzthccbr .gt_font_normal {
+#soefyflbvx .gt_font_normal {
 font-weight: normal;
 }
-#kmpzthccbr .gt_font_bold {
+#soefyflbvx .gt_font_bold {
 font-weight: bold;
 }
-#kmpzthccbr .gt_font_italic {
+#soefyflbvx .gt_font_italic {
 font-style: italic;
 }
-#kmpzthccbr .gt_super {
+#soefyflbvx .gt_super {
 font-size: 65%;
 }
-#kmpzthccbr .gt_footnote_marks {
+#soefyflbvx .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#kmpzthccbr .gt_asterisk {
+#soefyflbvx .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#kmpzthccbr .gt_indent_1 {
+#soefyflbvx .gt_indent_1 {
 text-indent: 5px;
 }
-#kmpzthccbr .gt_indent_2 {
+#soefyflbvx .gt_indent_2 {
 text-indent: 10px;
 }
-#kmpzthccbr .gt_indent_3 {
+#soefyflbvx .gt_indent_3 {
 text-indent: 15px;
 }
-#kmpzthccbr .gt_indent_4 {
+#soefyflbvx .gt_indent_4 {
 text-indent: 20px;
 }
-#kmpzthccbr .gt_indent_5 {
+#soefyflbvx .gt_indent_5 {
 text-indent: 25px;
 }
-#kmpzthccbr .katex-display {
+#soefyflbvx .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#kmpzthccbr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#soefyflbvx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="gt_col_headings header">
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border"><strong>Totalizações - Executores</strong></th>
+</tr>
+<tr class="gt_col_headings even">
 <th id="qtd_plano_acao" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Quantidade de Executores Únicos</th>
 <th id="total_valor" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor Total (R$)</th>
 <th id="valor_custeio" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor de Custeio (R$)</th>
 <th id="valor_investimento" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor de Investimento (R$)</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody class="gt_table_body"><tr class="odd">
 <td class="gt_row gt_right" headers="qtd_plano_acao">9.754</td>
-<td class="gt_row gt_right" headers="total_valor">6.674.052.094,80</td>
-<td class="gt_row gt_right" headers="valor_custeio">1.026.242.721,10</td>
-<td class="gt_row gt_right" headers="valor_investimento">5.647.809.373,70</td>
+<td class="gt_row gt_right" headers="total_valor">6.673.863.250,13</td>
+<td class="gt_row gt_right" headers="valor_custeio">1.026.263.291,36</td>
+<td class="gt_row gt_right" headers="valor_investimento">5.647.599.958,77</td>
 </tr></tbody>
 </table>
 </div>
@@ -3781,185 +3775,178 @@ height: 0px !important;
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Código fonte</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Análise exploratória - Totalizações&quot;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> &quot;Raul Durlo&quot;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> &quot;09-19-2025&quot;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="an">date-format:</span><span class="co"> &quot;D.MMM.YYYY&quot;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="an">date-modified:</span><span class="co"> &quot;last-modified&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> pt-BR</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="an">repo:</span><span class="co"> true</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="an">crossref:</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">  fig-prefix: &quot;Gráfico&quot; # (default is &quot;Figure&quot;)</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">  tbl-title: &quot;Tabela&quot; # (default is &quot;Table&quot;)</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">  title-delim: &quot;—&quot; # (default is &quot;:&quot;)</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">    grid:</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">      sidebar-width: 300px</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">      body-width: 1000px</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">    other-links:</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">      - text: Mais relatórios</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">        icon: file-bar-graph</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">        href: https://transparencia-brasil.github.io/emendas-parlamentares-transferencias-especiais/</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">      - text: Repositório no GitHub</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">        icon: github</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">        href: https://github.com/Transparencia-Brasil/emendas-parlamentares-transferencias-especiais</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">    html-math-method: katex</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">    anchor-sections: true</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">    code-link: true</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">    code-background: true</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">    code-summary: &quot;Código&quot;</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: &quot;Índice&quot;</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 5</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-float: false</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-collapsed: false</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">    footnotes-hover: true</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">    smooth-scroll: true</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 9</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 8</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-cap-location: top</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co">    tbl-cap-location: top</span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">    search: true</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co">    theme:</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">      light: cosmo</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co">      dark: darkly</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="an">knitr:</span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">  opts_chunk:</span></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">    collapse: true</span></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">    message: false</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">    warning: false</span></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">    comment: &quot;#&gt;&quot;</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="an">editor_options:</span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co">  chunk_output_type: console</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">  cache: false</span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>PATH_SETUP <span class="ot">&lt;-</span> <span class="st">&quot;setup/rsetup.R&quot;</span></span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(PATH_SETUP))</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>INPUT_DIR <span class="ot">&lt;-</span> <span class="st">&quot;tasks/analise-exploratoria/inputs&quot;</span></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>OUTPUT_DIR <span class="ot">&lt;-</span> <span class="st">&quot;tasks/analise-exploratoria/outputs&quot;</span></span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>PATH_MINI_TRANSFEREGOV <span class="ot">&lt;-</span> <span class="fu">here</span>(INPUT_DIR, <span class="st">&quot;mini-transferegov.rds&quot;</span>)</span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## Totalizações - Planos de Ação</span></span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>emendas <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(PATH_MINI_TRANSFEREGOV)</span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>emendas <span class="sc">|&gt;</span></span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id_plano_acao, valor_custeio_plano_acao, valor_investimento_plano_acao) <span class="sc">|&gt;</span></span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="fu">n</span>(),</span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="fu">sum</span>(valor_custeio_plano_acao, valor_investimento_plano_acao, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="fu">sum</span>(valor_custeio_plano_acao, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="fu">sum</span>(valor_investimento_plano_acao, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(</span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="st">&quot;Quantidade de Planos de Ação&quot;</span>,</span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="st">&quot;Valor Total (R$)&quot;</span>,</span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="st">&quot;Valor de Custeio (R$)&quot;</span>,</span>
-<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="st">&quot;Valor de Investimento (R$)&quot;</span></span>
-<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number_brl</span>(</span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> qtd_plano_acao,</span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">decimals =</span> <span class="dv">0</span></span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number_brl</span>(</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="fu">c</span>(total_valor, valor_custeio, valor_investimento),</span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>      <span class="at">decimals =</span> <span class="dv">2</span>,</span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>      <span class="co"># suffixing = c(&quot; mil&quot;, &quot; Mi&quot;, &quot; Bi&quot;, &quot; Tri&quot;)</span></span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Totalizações - Executores</span></span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>PATH_EXECUTORES_SITE <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">&quot;tasks/analise-exploratoria/inputs/executores-site.xlsx&quot;</span>)</span>
-<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a><span class="co"># executores_site &lt;- readxl::read_excel(PATH_EXECUTORES_SITE)  |&gt;</span></span>
-<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="co">#   janitor::clean_names()</span></span>
-<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="co"># executores &lt;- transferegov$executor |&gt;</span></span>
-<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(across(starts_with(&quot;vl_&quot;), as.numeric))</span></span>
-<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a><span class="co"># count(executores_site, wt = valor_custeio)</span></span>
-<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="co"># count(executores, wt = vl_custeio_executor)</span></span>
-<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a><span class="co"># executores_site |&gt;</span></span>
-<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a><span class="co">#   transmute(</span></span>
-<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a><span class="co">#     id_plano_acao = str_remove(codigo_plano_acao, &quot;^.+-0*&quot;),</span></span>
-<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a><span class="co">#     cnpj_executor,</span></span>
-<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a><span class="co">#     objeto_executor,</span></span>
-<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a><span class="co">#     valor_custeio_excel = valor_custeio,</span></span>
-<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a><span class="co">#     valor_investimento_excel = valor_investimento,</span></span>
-<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a><span class="co">#     excel = TRUE</span></span>
-<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) |&gt;</span></span>
-<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a><span class="co">#   left_join(</span></span>
-<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a><span class="co">#     executores |&gt;</span></span>
-<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a><span class="co">#       transmute(</span></span>
-<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a><span class="co">#         id_plano_acao,</span></span>
-<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a><span class="co">#         cnpj_executor,</span></span>
-<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a><span class="co">#         objeto_executor,</span></span>
-<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a><span class="co">#         valor_custeio_api = vl_custeio_executor,</span></span>
-<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a><span class="co">#         valor_investimento_api = vl_investimento_executor,</span></span>
-<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a><span class="co">#         api = TRUE</span></span>
-<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a><span class="co">#       )</span></span>
-<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) |&gt;</span></span>
-<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(</span></span>
-<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a><span class="co">#     api = replace_na(api, FALSE),</span></span>
-<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a><span class="co">#     total = excel + api</span></span>
-<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) |&gt;</span></span>
-<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(</span></span>
-<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a><span class="co">#     diferenca_custeio = round(replace_na(valor_custeio_excel, 0) - replace_na(valor_custeio_api, 0), 2),</span></span>
-<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a><span class="co">#     diferenca_investimento = round(replace_na(valor_investimento_excel, 0) - replace_na(valor_investimento_api, 0), 2)</span></span>
-<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) |&gt;</span></span>
-<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(diferenca_custeio != 0 | diferenca_investimento != 0) |&gt;</span></span>
-<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a><span class="co">#   View()</span></span>
-<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a>emendas <span class="sc">|&gt;</span></span>
-<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id_executor, vl_custeio_executor, vl_investimento_executor) <span class="sc">|&gt;</span></span>
-<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="fu">n_distinct</span>(id_executor),</span>
-<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="fu">sum</span>(vl_custeio_executor, vl_investimento_executor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="fu">sum</span>(vl_custeio_executor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="fu">sum</span>(vl_investimento_executor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(</span>
-<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="st">&quot;Quantidade de Executores Únicos&quot;</span>,</span>
-<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="st">&quot;Valor Total (R$)&quot;</span>,</span>
-<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="st">&quot;Valor de Custeio (R$)&quot;</span>,</span>
-<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="st">&quot;Valor de Investimento (R$)&quot;</span></span>
-<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number_brl</span>(</span>
-<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> qtd_plano_acao,</span>
-<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>      <span class="at">decimals =</span> <span class="dv">0</span></span>
-<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number_brl</span>(</span>
-<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="fu">c</span>(total_valor, valor_custeio, valor_investimento),</span>
-<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a>      <span class="at">decimals =</span> <span class="dv">2</span></span>
-<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb5" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Análise exploratória - Totalizações&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> &quot;Raul Durlo&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> &quot;09-19-2025&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="an">date-format:</span><span class="co"> &quot;D.MMM.YYYY&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="an">date-modified:</span><span class="co"> &quot;last-modified&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> pt-BR</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="an">repo:</span><span class="co"> true</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="an">crossref:</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">  fig-prefix: &quot;Gráfico&quot; # (default is &quot;Figure&quot;)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">  tbl-title: &quot;Tabela&quot; # (default is &quot;Table&quot;)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">  title-delim: &quot;—&quot; # (default is &quot;:&quot;)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">    grid:</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">      sidebar-width: 300px</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">      body-width: 1000px</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">    other-links:</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">      - text: Mais relatórios</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">        icon: file-bar-graph</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">        href: https://transparencia-brasil.github.io/emendas-parlamentares-transferencias-especiais/</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">      - text: Repositório no GitHub</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">        icon: github</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">        href: https://github.com/Transparencia-Brasil/emendas-parlamentares-transferencias-especiais</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">    html-math-method: katex</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">    anchor-sections: true</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">    code-link: true</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">    code-background: true</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">    code-summary: &quot;Código&quot;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: &quot;Índice&quot;</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 5</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-float: false</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-collapsed: false</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">    footnotes-hover: true</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">    smooth-scroll: true</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 9</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 8</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-cap-location: top</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co">    tbl-cap-location: top</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co">    search: true</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co">    theme:</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co">      light: cosmo</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co">      dark: darkly</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="an">knitr:</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co">  opts_chunk:</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co">    collapse: true</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co">    message: false</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co">    warning: false</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="co">    comment: &quot;#&gt;&quot;</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="an">editor_options:</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co">  chunk_output_type: console</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="co">  cache: false</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>PATH_SETUP <span class="ot">&lt;-</span> <span class="st">&quot;setup/rsetup.R&quot;</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(PATH_SETUP))</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>INPUT_DIR <span class="ot">&lt;-</span> <span class="st">&quot;tasks/analise-exploratoria/inputs&quot;</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>OUTPUT_DIR <span class="ot">&lt;-</span> <span class="st">&quot;tasks/analise-exploratoria/outputs&quot;</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>PATH_MINI_TRANSFEREGOV <span class="ot">&lt;-</span> <span class="fu">here</span>(INPUT_DIR, <span class="st">&quot;mini-transferegov.rds&quot;</span>)</span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## Totalizações - Planos de Ação</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: totalizacoes-planos-acao</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>emendas <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(PATH_MINI_TRANSFEREGOV)</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>emendas <span class="sc">|&gt;</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id_plano_acao, valor_custeio_plano_acao, valor_investimento_plano_acao) <span class="sc">|&gt;</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="fu">n</span>(),</span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="fu">sum</span>(valor_custeio_plano_acao, valor_investimento_plano_acao, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="fu">sum</span>(valor_custeio_plano_acao, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="fu">sum</span>(valor_investimento_plano_acao, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">&quot;**Totalizações - Planos de Ação**&quot;</span>)</span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="st">&quot;Quantidade de Planos de Ação&quot;</span>,</span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="st">&quot;Valor Total (R$)&quot;</span>,</span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="st">&quot;Valor de Custeio (R$)&quot;</span>,</span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="st">&quot;Valor de Investimento (R$)&quot;</span></span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number_brl</span>(</span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> qtd_plano_acao,</span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">0</span></span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number_brl</span>(</span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(total_valor, valor_custeio, valor_investimento),</span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">2</span></span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>    <span class="co"># suffixing = c(&quot; mil&quot;, &quot; Mi&quot;, &quot; Bi&quot;, &quot; Tri&quot;)</span></span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a><span class="fu">## Totalizações - Executores</span></span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: duplicidades-executores</span></span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: &quot;Duplicidades nos executores&quot;</span></span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a><span class="co"># Existem duas observações de executores que são duplicadas</span></span>
+<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a>PATH_EXECUTORES_SITE <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">&quot;tasks/analise-exploratoria/inputs/executores-site.xlsx&quot;</span>)</span>
+<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a>executores_site <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(PATH_EXECUTORES_SITE)  <span class="sc">|&gt;</span></span>
+<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span>
+<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a>executores <span class="ot">&lt;-</span> transferegov<span class="sc">$</span>executor <span class="sc">|&gt;</span></span>
+<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">&quot;vl_&quot;</span>), as.numeric))</span>
+<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a>executores_site <span class="sc">|&gt;</span></span>
+<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id_plano_acao =</span> <span class="fu">str_remove</span>(codigo_plano_acao, <span class="st">&quot;^.+-0*&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-138"><a href="#cb5-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a>    id_plano_acao <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;79888&quot;</span>, <span class="st">&quot;76494&quot;</span>)</span>
+<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a>executores <span class="sc">|&gt;</span></span>
+<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id_executor <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;37359&quot;</span>, <span class="st">&quot;37349&quot;</span>))</span>
+<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(executores_site, <span class="at">wt =</span> valor_custeio)</span>
+<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(executores, <span class="at">wt =</span> vl_custeio_executor)</span>
+<span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: totalizacoes-executores</span></span>
+<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>emendas <span class="sc">|&gt;</span></span>
+<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(id_executor, vl_custeio_executor, vl_investimento_executor) <span class="sc">|&gt;</span></span>
+<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="fu">n_distinct</span>(id_executor),</span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="fu">sum</span>(vl_custeio_executor, vl_investimento_executor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="fu">sum</span>(vl_custeio_executor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="fu">sum</span>(vl_investimento_executor, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(</span>
+<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a>    <span class="at">qtd_plano_acao =</span> <span class="st">&quot;Quantidade de Executores Únicos&quot;</span>,</span>
+<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_valor =</span> <span class="st">&quot;Valor Total (R$)&quot;</span>,</span>
+<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_custeio =</span> <span class="st">&quot;Valor de Custeio (R$)&quot;</span>,</span>
+<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">valor_investimento =</span> <span class="st">&quot;Valor de Investimento (R$)&quot;</span></span>
+<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(</span>
+<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">md</span>(<span class="st">&quot;**Totalizações - Executores**&quot;</span>)</span>
+<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number_brl</span>(</span>
+<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> qtd_plano_acao,</span>
+<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>      <span class="at">decimals =</span> <span class="dv">0</span></span>
+<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number_brl</span>(</span>
+<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="fu">c</span>(total_valor, valor_custeio, valor_investimento),</span>
+<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>      <span class="at">decimals =</span> <span class="dv">2</span></span>
+<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copiar para a área de transferência" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

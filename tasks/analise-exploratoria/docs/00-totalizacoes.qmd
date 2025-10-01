@@ -77,6 +77,8 @@ PATH_MINI_TRANSFEREGOV <- here(INPUT_DIR, "mini-transferegov.rds")
 ## Totalizações - Planos de Ação
 
 ```{r}
+#| label: totalizacoes-planos-acao
+
 emendas <- read_rds(PATH_MINI_TRANSFEREGOV)
 
 emendas |>
@@ -86,73 +88,58 @@ emendas |>
     total_valor = sum(valor_custeio_plano_acao, valor_investimento_plano_acao, na.rm = TRUE),
     valor_custeio = sum(valor_custeio_plano_acao, na.rm = TRUE),
     valor_investimento = sum(valor_investimento_plano_acao, na.rm = TRUE)
-    ) |>
-    gt() |>
-    cols_label(
+  ) |>
+  gt() |>
+  tab_header(
+    title = md("**Totalizações - Planos de Ação**")
+  ) |>
+  cols_label(
     qtd_plano_acao = "Quantidade de Planos de Ação",
     total_valor = "Valor Total (R$)",
     valor_custeio = "Valor de Custeio (R$)",
     valor_investimento = "Valor de Investimento (R$)"
-    ) |>
-    fmt_number_brl(
-      columns = qtd_plano_acao,
-      decimals = 0
-    ) |>
-    fmt_number_brl(
-      columns = c(total_valor, valor_custeio, valor_investimento),
-      decimals = 2,
-      # suffixing = c(" mil", " Mi", " Bi", " Tri")
-    )
+  ) |>
+  fmt_number_brl(
+    columns = qtd_plano_acao,
+    decimals = 0
+  ) |>
+  fmt_number_brl(
+    columns = c(total_valor, valor_custeio, valor_investimento),
+    decimals = 2
+    # suffixing = c(" mil", " Mi", " Bi", " Tri")
+  )
 ```
 
 ## Totalizações - Executores
 
 ```{r}
+#| label: duplicidades-executores
+#| eval: false
+#| code-summary: "Duplicidades nos executores"
+
+# ⚠️ Existem* duas observações de executores que são duplicadas
 
 PATH_EXECUTORES_SITE <- here("tasks/analise-exploratoria/inputs/executores-site.xlsx")
 
-# executores_site <- readxl::read_excel(PATH_EXECUTORES_SITE)  |>
-#   janitor::clean_names()
+executores_site <- readxl::read_excel(PATH_EXECUTORES_SITE)  |>
+  janitor::clean_names()
 
-# executores <- transferegov$executor |>
-#   mutate(across(starts_with("vl_"), as.numeric))
+executores <- transferegov$executor |>
+  mutate(across(starts_with("vl_"), as.numeric))
 
-# count(executores_site, wt = valor_custeio)
-# count(executores, wt = vl_custeio_executor)
+executores_site |>
+  mutate(id_plano_acao = str_remove(codigo_plano_acao, "^.+-0*")) |>
+  filter(id_plano_acao %in% c("79888", "76494"))
 
-# executores_site |>
-#   transmute(
-#     id_plano_acao = str_remove(codigo_plano_acao, "^.+-0*"),
-#     cnpj_executor,
-#     objeto_executor,
-#     valor_custeio_excel = valor_custeio,
-#     valor_investimento_excel = valor_investimento,
-#     excel = TRUE
-#   ) |>
-#   left_join(
-#     executores |>
-#       transmute(
-#         id_plano_acao,
-#         cnpj_executor,
-#         objeto_executor,
-#         valor_custeio_api = vl_custeio_executor,
-#         valor_investimento_api = vl_investimento_executor,
-#         api = TRUE
-#       )
-#   ) |>
-#   mutate(
-#     api = replace_na(api, FALSE),
-#     total = excel + api
-#   ) |>
-#   mutate(
-#     diferenca_custeio = round(replace_na(valor_custeio_excel, 0) - replace_na(valor_custeio_api, 0), 2),
-#     diferenca_investimento = round(replace_na(valor_investimento_excel, 0) - replace_na(valor_investimento_api, 0), 2)
-#   ) |>
-#   filter(diferenca_custeio != 0 | diferenca_investimento != 0) |>
-#   View()
+executores |>
+  filter(id_executor %in% c("37359", "37349"))
 
+count(executores_site, wt = valor_custeio) |> pull(n) - 1367190
+count(executores, wt = vl_custeio_executor) |> pull(n) - 1367190
+```
 
-
+```{r}
+#| label: totalizacoes-executores
 
 emendas |>
   distinct(id_executor, vl_custeio_executor, vl_investimento_executor) |>
@@ -168,6 +155,9 @@ emendas |>
     total_valor = "Valor Total (R$)",
     valor_custeio = "Valor de Custeio (R$)",
     valor_investimento = "Valor de Investimento (R$)"
+    ) |>
+    tab_header(
+      title = md("**Totalizações - Executores**")
     ) |>
     fmt_number_brl(
       columns = qtd_plano_acao,
