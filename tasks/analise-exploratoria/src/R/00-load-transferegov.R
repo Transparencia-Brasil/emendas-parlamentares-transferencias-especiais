@@ -117,7 +117,7 @@ finalidades <- executores |>
 plano_acao # 10.145 linhas
 plano_trabalho # 9.747 linhas
 executores # 9.753 linhas
-metas # 23.273 linhas
+metas # 23.701 linhas
 # finalidades # 10.349 linhas
 
 # RELAÇÕES:
