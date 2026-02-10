@@ -117,7 +117,7 @@ finalidades <- executores |>
 plano_acao # 10.145 linhas
 plano_trabalho # 9.747 linhas
 executores # 9.753 linhas
-metas # 23.701 linhas
+metas # 23.701 linhas (out.2025) | 25.240 (fev.2025)
 # finalidades # 10.349 linhas
 
 # RELAÇÕES:
@@ -174,3 +174,4 @@ emendas <- emendas |>
   )
 
 saveRDS(emendas, PATH_MINI_TRANSFEREGOV)
+write_excel_csv2(emendas, "tasks\\analise-exploratoria\\inputs\\emendas-detalhadas-fevereiro-2026.csv")
