@@ -61,9 +61,9 @@ ler_csvs_transferegov <- function(dir = CSV_DIR) {
 
 
 #' Converter tipos de colunas de um data.frame
-#' Aplica conversões automáticas baseadas no nome da coluna:
+#' Aplica conversões automáticas baseadas no nome da coluna e conteúdo:
 #'   - Colunas com prefixo valor_, vl_, qt_ → as.numeric()
-#'   - Colunas com data_hora_ ou data_e_hora_ → as.POSIXct() (ISO 8601)
+#'   - Colunas timestamp (nome com data_hora_/data_e_hora_ ou conteúdo ISO 8601 com "T") → as.POSIXct()
 #'   - Colunas com data_ (sem hora) → as.Date()
 #'   - Demais colunas permanecem character
 #' @param df Um data.frame com colunas character.
@@ -72,13 +72,29 @@ converter_tipos <- function(df) {
   nomes <- names(df)
 
   # Colunas numéricas: valor_, vl_, qt_
-
   cols_num <- nomes[str_detect(nomes, "^(valor_|vl_|qt_)")]
-  # Colunas timestamp: data_hora_, data_e_hora_
+  
+  # Colunas timestamp: inicia por padrão de nome (data_hora_, data_e_hora_)
   cols_ts <- nomes[str_detect(nomes, "(data_hora_|data_e_hora_)")]
-  # Colunas date: data_ (sem hora) — exclui as que já são timestamp
+  
+  # Detecta colunas adicionais com timestamp por conteúdo (presença de "T" no formato ISO 8601)
+  # Candidatas: colunas data_ que não têm hora_ ou e_hora_ no nome
+  cols_data_candidatas <- nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")]
+  
+  # Número de valores a amostrar para detectar timestamps por conteúdo
+  TIMESTAMP_SAMPLE_SIZE <- 5
+  
+  # Verifica conteúdo de cada coluna candidata
+  cols_ts_conteudo <- purrr::keep(cols_data_candidatas, \(col) {
+    amostra <- df[[col]][!is.na(df[[col]])]
+    length(amostra) > 0 && any(str_detect(amostra[1:min(TIMESTAMP_SAMPLE_SIZE, length(amostra))], "T"))
+  })
+  
+  cols_ts <- c(cols_ts, cols_ts_conteudo)
+  
+  # Colunas date: data_ (sem hora) — exclui as que foram identificadas como timestamp
   cols_date <- setdiff(
-    nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")],
+    nomes[str_detect(nomes, "^data_")],
     cols_ts
   )
 
