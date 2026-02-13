@@ -32,6 +32,8 @@ PATH_EXECUTOR <- get_file(file = "09-executor.csv")
 PATH_META <- get_file(file = "10-meta.csv")
 PATH_PLANO_TRABALHO <- get_file(file = "11-plano-trabalho.csv")
 PATH_FINALIDADE <- get_file(file = "12-finalidade.csv")
+PATH_PLANO_TRABALHO_ANALISE <- get_file(file = "13-plano-trabalho-analise.csv")
+PATH_ORGAO_ANALISE_PENDENTE <- get_file(file = "14-orgao-analise-pendente.csv")
 
 lubridate::now()
 
@@ -73,7 +75,9 @@ start_msg <- c(
   "Coletando lista de executores...",
   "Coletando metas...",
   "Coletando planos de trabalho...",
-  "Colentando lista de finalidades..."
+  "Colentando lista de finalidades...",
+  "Coletando análises de planos de trabalho...",
+  "Coletando análises de órgãos com pendências..."
 )
 
 end_msg <- c(
@@ -87,7 +91,9 @@ end_msg <- c(
   "Fim da coleta de lista de executores.",
   "Fim da coleta de metas.",
   "Fim da coleta de planos de trabalho.",
-  "Fim da coleta de lista de finalidades."
+  "Fim da coleta de lista de finalidades.",
+  "Fim da coleta de análises de planos de trabalho.",
+  "Fim da coleta de análises de órgãos com pendências."
 )
 
 path_input <- c(
@@ -101,7 +107,9 @@ path_input <- c(
   PATH_PLANO_ACAO,
   PATH_EXECUTOR,
   PATH_PLANO_ACAO,
-  PATH_EXECUTOR
+  PATH_EXECUTOR,
+  PATH_PLANO_TRABALHO,
+  PATH_PLANO_TRABALHO
 )
 
 path_output <- c(
@@ -115,7 +123,9 @@ path_output <- c(
   PATH_EXECUTOR,
   PATH_META,
   PATH_PLANO_TRABALHO,
-  PATH_FINALIDADE
+  PATH_FINALIDADE,
+  PATH_PLANO_TRABALHO_ANALISE,
+  PATH_ORGAO_ANALISE_PENDENTE
 )
 
 resource <- c(
@@ -129,7 +139,9 @@ resource <- c(
   "executor_especial",
   "meta_especial",
   "plano_trabalho_especial",
-  "finalidade_especial"
+  "finalidade_especial",
+  "plano_trabalho_analise_especial",
+  "orgao_analise_pendente_especial"
 )
 
 key_column <- c(
@@ -143,7 +155,9 @@ key_column <- c(
   "id_plano_acao",
   "id_executor",
   "id_plano_acao",
-  "id_executor"
+  "id_executor",
+  "id_plano_trabalho",
+  "id_plano_trabalho"
 )
 
 # Montando a tibble final
