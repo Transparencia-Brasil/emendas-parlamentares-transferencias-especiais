@@ -474,9 +474,14 @@ popular_tabelas <- function(con, tabelas) {
   # Remove tabelas faltantes e suas dependentes
   if (length(faltantes) > 0) {
     # Calcula todas as tabelas que devem ser removidas (faltantes + dependentes)
-    # Pré-computa índice reverso (filho → pai) para eficiência O(n)
-    filhos_por_pai <- split(names(dependencias), 
-                             unlist(dependencias[!sapply(dependencias, is.null)]))
+    # Pré-computa índice reverso (pai → filhos) para eficiência O(n)
+    filhos_por_pai <- list()
+    for (filho in names(dependencias)) {
+      pai <- dependencias[[filho]]
+      if (!is.null(pai)) {
+        filhos_por_pai[[pai]] <- c(filhos_por_pai[[pai]], filho)
+      }
+    }
     
     tabelas_removidas <- faltantes
     fila_idx <- 1
@@ -507,7 +512,7 @@ popular_tabelas <- function(con, tabelas) {
     dependentes_removidas <- setdiff(tabelas_removidas, faltantes)
     if (length(dependentes_removidas) > 0) {
       cli::cat_line(cli::col_yellow(
-        "\u26A0 Tabelas dependentes também serão ignoradas (para evitar FKs órfãs): ",
+        "\u26A0 Tabelas dependentes também serão ignoradas (para evitar violações de FK): ",
         paste(dependentes_removidas, collapse = ", ")
       ))
     }
