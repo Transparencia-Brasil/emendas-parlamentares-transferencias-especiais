@@ -63,7 +63,7 @@ ler_csvs_transferegov <- function(dir = CSV_DIR) {
 #' Converter tipos de colunas de um data.frame
 #' Aplica conversões automáticas baseadas no nome da coluna e conteúdo:
 #'   - Colunas com prefixo valor_, vl_, qt_ → as.numeric()
-#'   - Colunas timestamp (nome ou conteúdo com "T") → as.POSIXct() (ISO 8601)
+#'   - Colunas timestamp (nome com data_hora_/data_e_hora_ ou conteúdo ISO 8601 com "T") → as.POSIXct()
 #'   - Colunas com data_ (sem hora) → as.Date()
 #'   - Demais colunas permanecem character
 #' @param df Um data.frame com colunas character.
@@ -78,8 +78,8 @@ converter_tipos <- function(df) {
   cols_ts <- nomes[str_detect(nomes, "(data_hora_|data_e_hora_)")]
   
   # Detecta colunas adicionais com timestamp por conteúdo (presença de "T" no formato ISO 8601)
+  # Candidatas: colunas data_ que não têm hora_ ou e_hora_ no nome
   cols_data_candidatas <- nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")]
-  cols_data_candidatas <- setdiff(cols_data_candidatas, cols_ts)
   
   # Número de valores a amostrar para detectar timestamps por conteúdo
   TIMESTAMP_SAMPLE_SIZE <- 5
