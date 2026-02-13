@@ -465,8 +465,8 @@ popular_tabelas <- function(con, tabelas) {
   faltantes_obrigatorias <- intersect(faltantes, obrigatorias)
   if (length(faltantes_obrigatorias) > 0) {
     cli::cli_abort(c(
-      "x" = "Tabelas obrigatórias ausentes nos CSVs:",
-      "i" = paste(faltantes_obrigatorias, collapse = ", "),
+      "x" = paste("Tabelas obrigatórias ausentes nos CSVs:", 
+                  paste(faltantes_obrigatorias, collapse = ", ")),
       "i" = "A carga não pode prosseguir sem as tabelas raiz da hierarquia."
     ))
   }
@@ -474,18 +474,25 @@ popular_tabelas <- function(con, tabelas) {
   # Remove tabelas faltantes e suas dependentes
   if (length(faltantes) > 0) {
     # Calcula todas as tabelas que devem ser removidas (faltantes + dependentes)
+    # Usa fila para BFS: mais eficiente que busca repetida O(n) em vez de O(n²)
     tabelas_removidas <- faltantes
+    fila <- faltantes
     
-    # Itera até não encontrar mais dependentes
-    repeat {
-      # Encontra tabelas cujo pai está na lista de removidas
-      novas_removidas <- names(dependencias)[
-        purrr::map_lgl(dependencias, ~ !is.null(.x) && .x %in% tabelas_removidas)
-      ]
-      novas_removidas <- setdiff(novas_removidas, tabelas_removidas)
+    while (length(fila) > 0) {
+      pai_removido <- fila[1]
+      fila <- fila[-1]
       
-      if (length(novas_removidas) == 0) break
-      tabelas_removidas <- c(tabelas_removidas, novas_removidas)
+      # Encontra filhos diretos deste pai
+      filhos <- names(dependencias)[
+        purrr::map_lgl(dependencias, ~ !is.null(.x) && .x == pai_removido)
+      ]
+      
+      # Adiciona filhos novos à fila e à lista de removidas
+      novos_filhos <- setdiff(filhos, tabelas_removidas)
+      if (length(novos_filhos) > 0) {
+        tabelas_removidas <- c(tabelas_removidas, novos_filhos)
+        fila <- c(fila, novos_filhos)
+      }
     }
     
     cli::cat_line(cli::col_yellow(
@@ -497,7 +504,7 @@ popular_tabelas <- function(con, tabelas) {
     dependentes_removidas <- setdiff(tabelas_removidas, faltantes)
     if (length(dependentes_removidas) > 0) {
       cli::cat_line(cli::col_yellow(
-        "\u26A0 Tabelas dependentes também serão ignoradas (FK órfãs): ",
+        "\u26A0 Tabelas dependentes também serão ignoradas (para evitar FKs órfãs): ",
         paste(dependentes_removidas, collapse = ", ")
       ))
     }
