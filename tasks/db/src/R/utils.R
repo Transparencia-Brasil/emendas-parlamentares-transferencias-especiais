@@ -39,7 +39,8 @@ ler_csvs_transferegov <- function(dir = CSV_DIR) {
   ids <- basename(arquivos) |>
     snakecase::to_snake_case() |>
     str_remove("^\\d+_") |>
-    str_remove("_csv$")
+    str_remove("_csv$") |>
+    str_remove("_especial$")
 
   tabelas <- arquivos |>
     purrr::map(readr::read_csv,
