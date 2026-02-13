@@ -406,6 +406,16 @@ criar_tabelas <- function(con) {
 
 #' Popular tabelas do banco DuckDB a partir de data.frames
 #' Insere os dados na ordem correta para respeitar as constraints de FK.
+#' 
+#' Esta função valida a presença de tabelas obrigatórias e remove automaticamente
+#' tabelas dependentes quando suas tabelas pai estão ausentes, evitando falhas de FK.
+#' 
+#' Comportamento:
+#' - Falha imediatamente se tabelas obrigatórias (ex: "programa") estiverem ausentes
+#' - Remove automaticamente tabelas dependentes quando tabelas pai estão faltando
+#' - Exemplo: se "empenho" faltar, "documento_habil", "ordem_pagamento" e 
+#'   "historico_pagamento" são automaticamente removidas para evitar FK órfãs
+#' 
 #' @param con Conexão DBI ao banco DuckDB.
 #' @param tabelas Lista nomeada de data.frames (saída de ler_csvs_transferegov).
 popular_tabelas <- function(con, tabelas) {
@@ -427,6 +437,26 @@ popular_tabelas <- function(con, tabelas) {
     "historico_pagamento"
   )
 
+  # Mapeamento de dependências: tabela → tabela pai (se houver FK)
+  dependencias <- list(
+    programa                = NULL,
+    plano_acao              = "programa",
+    empenho                 = "plano_acao",
+    relatorio_gestao_novo   = "plano_acao",
+    executor                = "plano_acao",
+    plano_trabalho          = "plano_acao",
+    documento_habil         = "empenho",
+    meta                    = "executor",
+    finalidade              = "executor",
+    plano_trabalho_analise  = "plano_trabalho",
+    orgao_analise_pendente  = "plano_trabalho",
+    ordem_pagamento         = "documento_habil",
+    historico_pagamento     = "ordem_pagamento"
+  )
+
+  # Tabelas obrigatórias (raiz da hierarquia)
+  obrigatorias <- c("programa")
+
   # Mapeamento de chave primária por tabela (para deduplicar)
   pk_map <- c(
     programa                = "id_programa",
@@ -446,12 +476,65 @@ popular_tabelas <- function(con, tabelas) {
 
   # Valida que todas as tabelas esperadas existem nos dados lidos
   faltantes <- setdiff(ordem_insercao, names(tabelas))
+  
+  # Falha cedo se tabelas obrigatórias estiverem ausentes
+  faltantes_obrigatorias <- intersect(faltantes, obrigatorias)
+  if (length(faltantes_obrigatorias) > 0) {
+    cli::cli_abort(c(
+      "x" = paste("Tabelas obrigatórias ausentes nos CSVs:", 
+                  paste(faltantes_obrigatorias, collapse = ", ")),
+      "i" = "A carga não pode prosseguir sem as tabelas raiz da hierarquia."
+    ))
+  }
+  
+  # Remove tabelas faltantes e suas dependentes
   if (length(faltantes) > 0) {
+    # Calcula todas as tabelas que devem ser removidas (faltantes + dependentes)
+    # Pré-computa índice reverso (pai → filhos) para eficiência O(n)
+    # Nota: usa c() para simplicidade; com 13 tabelas, overhead é negligível
+    filhos_por_pai <- list()
+    for (filho in names(dependencias)) {
+      pai <- dependencias[[filho]]
+      if (!is.null(pai)) {
+        filhos_por_pai[[pai]] <- c(filhos_por_pai[[pai]], filho)
+      }
+    }
+    
+    tabelas_removidas <- faltantes
+    fila_idx <- 1
+    fila <- faltantes
+    
+    # BFS usando índice em vez de remover elementos (evita O(n) por remoção)
+    while (fila_idx <= length(fila)) {
+      pai_removido <- fila[fila_idx]
+      fila_idx <- fila_idx + 1
+      
+      # Consulta O(1) no índice reverso
+      filhos <- filhos_por_pai[[pai_removido]]
+      if (!is.null(filhos)) {
+        novos_filhos <- setdiff(filhos, tabelas_removidas)
+        if (length(novos_filhos) > 0) {
+          tabelas_removidas <- c(tabelas_removidas, novos_filhos)
+          fila <- c(fila, novos_filhos)
+        }
+      }
+    }
+    
     cli::cat_line(cli::col_yellow(
-      "\u26A0 Tabelas ausentes nos CSVs (serão ignoradas): ",
+      "\u26A0 Tabelas ausentes nos CSVs: ",
       paste(faltantes, collapse = ", ")
     ))
-    ordem_insercao <- intersect(ordem_insercao, names(tabelas))
+    
+    # Se há tabelas dependentes que serão removidas além das faltantes
+    dependentes_removidas <- setdiff(tabelas_removidas, faltantes)
+    if (length(dependentes_removidas) > 0) {
+      cli::cat_line(cli::col_yellow(
+        "\u26A0 Tabelas dependentes também serão ignoradas (para evitar violações de FK): ",
+        paste(dependentes_removidas, collapse = ", ")
+      ))
+    }
+    
+    ordem_insercao <- setdiff(ordem_insercao, tabelas_removidas)
   }
 
   # Insere cada tabela (com deduplicação prévia)
