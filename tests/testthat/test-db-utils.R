@@ -92,7 +92,7 @@ test_that("converter_tipos converte colunas TIMESTAMP com data_e_hora_ (ISO 8601
   expect_type(resultado$nome, "character")
 })
 
-test_that("converter_tipos NÃO converte data_hora_ para DATE (deve ser TIMESTAMP)", {
+test_that("converter_tipos não converte data_hora_ para DATE (deve ser TIMESTAMP)", {
   df <- data.frame(
     data_hora_teste = c("2024-01-15T10:30:00"),
     data_teste = c("2024-01-15"),
