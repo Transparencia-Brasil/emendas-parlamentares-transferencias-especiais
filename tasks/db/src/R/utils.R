@@ -81,13 +81,16 @@ converter_tipos <- function(df) {
   cols_data_candidatas <- nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")]
   cols_data_candidatas <- setdiff(cols_data_candidatas, cols_ts)
   
-  for (col in cols_data_candidatas) {
-    # Verifica se o primeiro valor não-NA contém "T" (indicando timestamp ISO 8601)
+  # Número de valores a amostrar para detectar timestamps por conteúdo
+  TIMESTAMP_SAMPLE_SIZE <- 5
+  
+  # Verifica conteúdo de cada coluna candidata
+  cols_ts_conteudo <- purrr::keep(cols_data_candidatas, \(col) {
     amostra <- df[[col]][!is.na(df[[col]])]
-    if (length(amostra) > 0 && any(str_detect(amostra[1:min(5, length(amostra))], "T"))) {
-      cols_ts <- c(cols_ts, col)
-    }
-  }
+    length(amostra) > 0 && any(str_detect(amostra[1:min(TIMESTAMP_SAMPLE_SIZE, length(amostra))], "T"))
+  })
+  
+  cols_ts <- c(cols_ts, cols_ts_conteudo)
   
   # Colunas date: data_ (sem hora) — exclui as que foram identificadas como timestamp
   cols_date <- setdiff(
