@@ -83,7 +83,7 @@ converter_tipos <- function(df) {
 
   df <- df |>
     mutate(across(all_of(cols_num), as.numeric)) |>
-    mutate(across(all_of(cols_ts), ~ as.POSIXct(.x, format = "%Y-%m-%dT%H:%M:%OS"))) |>
+    mutate(across(all_of(cols_ts), ~ as.POSIXct(.x, format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC"))) |>
     mutate(across(all_of(cols_date), ~ as.Date(.x)))
 
   df
