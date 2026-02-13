@@ -475,6 +475,7 @@ popular_tabelas <- function(con, tabelas) {
   if (length(faltantes) > 0) {
     # Calcula todas as tabelas que devem ser removidas (faltantes + dependentes)
     # Pré-computa índice reverso (pai → filhos) para eficiência O(n)
+    # Nota: usa c() para simplicidade; com 13 tabelas, overhead é negligível
     filhos_por_pai <- list()
     for (filho in names(dependencias)) {
       pai <- dependencias[[filho]]
