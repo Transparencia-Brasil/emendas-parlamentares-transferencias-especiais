@@ -474,24 +474,27 @@ popular_tabelas <- function(con, tabelas) {
   # Remove tabelas faltantes e suas dependentes
   if (length(faltantes) > 0) {
     # Calcula todas as tabelas que devem ser removidas (faltantes + dependentes)
-    # Usa fila para BFS: mais eficiente que busca repetida O(n) em vez de O(n²)
+    # Pré-computa índice reverso (filho → pai) para eficiência O(n)
+    filhos_por_pai <- split(names(dependencias), 
+                             unlist(dependencias[!sapply(dependencias, is.null)]))
+    
     tabelas_removidas <- faltantes
+    fila_idx <- 1
     fila <- faltantes
     
-    while (length(fila) > 0) {
-      pai_removido <- fila[1]
-      fila <- fila[-1]
+    # BFS usando índice em vez de remover elementos (evita O(n) por remoção)
+    while (fila_idx <= length(fila)) {
+      pai_removido <- fila[fila_idx]
+      fila_idx <- fila_idx + 1
       
-      # Encontra filhos diretos deste pai
-      filhos <- names(dependencias)[
-        purrr::map_lgl(dependencias, ~ !is.null(.x) && .x == pai_removido)
-      ]
-      
-      # Adiciona filhos novos à fila e à lista de removidas
-      novos_filhos <- setdiff(filhos, tabelas_removidas)
-      if (length(novos_filhos) > 0) {
-        tabelas_removidas <- c(tabelas_removidas, novos_filhos)
-        fila <- c(fila, novos_filhos)
+      # Consulta O(1) no índice reverso
+      filhos <- filhos_por_pai[[pai_removido]]
+      if (!is.null(filhos)) {
+        novos_filhos <- setdiff(filhos, tabelas_removidas)
+        if (length(novos_filhos) > 0) {
+          tabelas_removidas <- c(tabelas_removidas, novos_filhos)
+          fila <- c(fila, novos_filhos)
+        }
       }
     }
     
