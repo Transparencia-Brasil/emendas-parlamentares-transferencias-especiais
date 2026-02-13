@@ -61,9 +61,9 @@ ler_csvs_transferegov <- function(dir = CSV_DIR) {
 
 
 #' Converter tipos de colunas de um data.frame
-#' Aplica conversões automáticas baseadas no nome da coluna:
+#' Aplica conversões automáticas baseadas no nome da coluna e conteúdo:
 #'   - Colunas com prefixo valor_, vl_, qt_ → as.numeric()
-#'   - Colunas com data_hora_ ou data_e_hora_ → as.POSIXct() (ISO 8601)
+#'   - Colunas timestamp (nome ou conteúdo com "T") → as.POSIXct() (ISO 8601)
 #'   - Colunas com data_ (sem hora) → as.Date()
 #'   - Demais colunas permanecem character
 #' @param df Um data.frame com colunas character.
@@ -72,13 +72,26 @@ converter_tipos <- function(df) {
   nomes <- names(df)
 
   # Colunas numéricas: valor_, vl_, qt_
-
   cols_num <- nomes[str_detect(nomes, "^(valor_|vl_|qt_)")]
-  # Colunas timestamp: data_hora_, data_e_hora_
+  
+  # Colunas timestamp: inicia por padrão de nome (data_hora_, data_e_hora_)
   cols_ts <- nomes[str_detect(nomes, "(data_hora_|data_e_hora_)")]
-  # Colunas date: data_ (sem hora) — exclui as que já são timestamp
+  
+  # Detecta colunas adicionais com timestamp por conteúdo (presença de "T" no formato ISO 8601)
+  cols_data_candidatas <- nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")]
+  cols_data_candidatas <- setdiff(cols_data_candidatas, cols_ts)
+  
+  for (col in cols_data_candidatas) {
+    # Verifica se o primeiro valor não-NA contém "T" (indicando timestamp ISO 8601)
+    amostra <- df[[col]][!is.na(df[[col]])]
+    if (length(amostra) > 0 && any(str_detect(amostra[1:min(5, length(amostra))], "T"))) {
+      cols_ts <- c(cols_ts, col)
+    }
+  }
+  
+  # Colunas date: data_ (sem hora) — exclui as que foram identificadas como timestamp
   cols_date <- setdiff(
-    nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")],
+    nomes[str_detect(nomes, "^data_")],
     cols_ts
   )
 
