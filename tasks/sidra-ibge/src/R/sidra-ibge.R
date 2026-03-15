@@ -7,7 +7,7 @@ tidy_populacao_ibge <- \(populacao_ibge) {
   populacao_ibge <- populacao_ibge %>%
     set_names(col_names) %>%
     slice(-1)
-  return(populacao_ibge)
+  populacao_ibge
 }
 
 populacao_ibge <- populacao_ibge_sidra %>%
@@ -32,7 +32,7 @@ tidy_pib_ibge <- \(pib_ibge) {
   pib_ibge <- pib_ibge %>%
     set_names(col_names) %>%
     slice(-1)
-  return(pib_ibge)
+  pib_ibge
 }
 
 pib_ibge <- pib_ibge_sidra %>%
