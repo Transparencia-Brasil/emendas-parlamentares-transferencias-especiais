@@ -115,6 +115,12 @@ consolida_emendas_por_programas <- function(id_prog) {
     inner_join(transferegov$finalidade)
     # não tá fazendo muito sentido: ver id_executor == "47042"
 
+    # Análises de planos de trabalho
+    # -----------------------------
+    plano_trabalho_analise <- plano_trabalho |>
+      distinct(id_plano_trabalho) |>
+      inner_join(transferegov$plano_trabalho_analise)
+
 
   # :: CRIAR TABELA ÚNICA --------------------------------------------------------
 
@@ -135,7 +141,7 @@ consolida_emendas_por_programas <- function(id_prog) {
 
   emendas <- left_join(emendas, metas)
 
-  emendas |>
+  emendas <- emendas |>
     select(
       codigo_programa,
       id_plano_acao,
@@ -175,15 +181,25 @@ consolida_emendas_por_programas <- function(id_prog) {
       #
       vl_custeio_rendimento_meta,
       vl_investimento_rendimento_meta
-
     )
+
+  list(emendas = emendas, plano_trabalho_analise = plano_trabalho_analise)
 
 }
 
 emendas_programa_23 <- consolida_emendas_por_programas("23")
 emendas_programa_24 <- consolida_emendas_por_programas("24")
 
-emendas <- bind_rows(emendas_programa_23, emendas_programa_24)
+emendas <- bind_rows(emendas_programa_23$emendas, emendas_programa_24$emendas)
+
+plano_trabalho_analise <- bind_rows(
+  emendas_programa_23$plano_trabalho_analise,
+  emendas_programa_24$plano_trabalho_analise
+)
+
+emendas <- emendas |>
+  left_join(plano_trabalho_analise, relationship = "many-to-many")
+
 
 saveRDS(emendas, PATH_MINI_TRANSFEREGOV)
 write_excel_csv2(emendas, "tasks\\analise-exploratoria\\inputs\\emendas-detalhadas-fevereiro-2026.csv")

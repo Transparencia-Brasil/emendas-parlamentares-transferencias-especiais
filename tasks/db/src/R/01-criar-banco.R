@@ -22,7 +22,7 @@ source(here("tasks/db/src/R/utils.R"))
 
 # :: 1. LER CSVs ---------------------------------------------------------------
 
-cli::cat_rule("Lendo CSVs de tasks/transferegov/outputs/")
+cli::cat_rule("Lendo CSVs de tasks/transferegov/outputs/ e tasks/malhas-municipais/outputs/")
 tabelas <- ler_csvs_transferegov()
 
 

@@ -12,6 +12,7 @@ library(snakecase)
 
 DB_PATH <- here("tasks/db/outputs/transferegov.duckdb")
 CSV_DIR <- here("tasks/transferegov/outputs")
+IBGE_DIR <- here("tasks/malhas-municipais/outputs")
 
 
 # :: FUNÇÕES -------------------------------------------------------------------
@@ -27,11 +28,12 @@ conectar_transferegov <- function(path = DB_PATH) {
 }
 
 
-#' Ler CSVs da pasta de outputs do Transferegov
+#' Ler CSVs da pasta de outputs do Transferegov e tabelas IBGE
 #' Lista, lê e nomeia todos os CSVs como character.
 #' Reutiliza a lógica de `read_transferegov_csvs()` de 00-load-transferegov.R.
-#' @param dir Diretório contendo os CSVs (default: tasks/transferegov/outputs).
-#' @return Lista nomeada de data.frames (um por tabela).
+#' Também lê municipios.csv e uf.csv de tasks/malhas-municipais/outputs/.
+#' @param dir Diretório contendo os CSVs do Transferegov (default: tasks/transferegov/outputs).
+#' @return Lista nomeada de data.frames (um por tabela, incluindo tabelas IBGE).
 ler_csvs_transferegov <- function(dir = CSV_DIR) {
   arquivos <- list.files(dir, pattern = "\\.csv$", full.names = TRUE)
   stopifnot("Nenhum CSV encontrado" = length(arquivos) > 0)
@@ -50,6 +52,21 @@ ler_csvs_transferegov <- function(dir = CSV_DIR) {
       progress = FALSE
     ) |>
     purrr::set_names(ids)
+
+  # Lê CSVs do IBGE (malhas municipais)
+  ibge_csvs <- list(
+    municipio = here("tasks/malhas-municipais/outputs/municipios.csv"),
+    uf        = here("tasks/malhas-municipais/outputs/uf.csv")
+  )
+
+  ibge_tabelas <- purrr::map(ibge_csvs, readr::read_csv,
+    col_types = readr::cols(.default = readr::col_character()),
+    locale = readr::locale(encoding = "UTF-8"),
+    na = c("", "NA"),
+    progress = FALSE
+  )
+
+  tabelas <- c(ibge_tabelas, tabelas)
 
   cli::cat_line(cli::col_green(
     "\u2714 ", length(tabelas), " tabelas lidas: ",
@@ -71,27 +88,27 @@ ler_csvs_transferegov <- function(dir = CSV_DIR) {
 converter_tipos <- function(df) {
   nomes <- names(df)
 
-  # Colunas numéricas: valor_, vl_, qt_
-  cols_num <- nomes[str_detect(nomes, "^(valor_|vl_|qt_)")]
-  
+  # Colunas numéricas: valor_, vl_, qt_, populacao_, pib_
+  cols_num <- nomes[str_detect(nomes, "^(valor_|vl_|qt_|populacao_|pib_)")]
+
   # Colunas timestamp: inicia por padrão de nome (data_hora_, data_e_hora_)
   cols_ts <- nomes[str_detect(nomes, "(data_hora_|data_e_hora_)")]
-  
+
   # Detecta colunas adicionais com timestamp por conteúdo (presença de "T" no formato ISO 8601)
   # Candidatas: colunas data_ que não têm hora_ ou e_hora_ no nome
   cols_data_candidatas <- nomes[str_detect(nomes, "^data_") & !str_detect(nomes, "(hora_|e_hora_)")]
-  
+
   # Número de valores a amostrar para detectar timestamps por conteúdo
   TIMESTAMP_SAMPLE_SIZE <- 5
-  
+
   # Verifica conteúdo de cada coluna candidata
   cols_ts_conteudo <- purrr::keep(cols_data_candidatas, \(col) {
     amostra <- df[[col]][!is.na(df[[col]])]
-    length(amostra) > 0 && any(str_detect(amostra[1:min(TIMESTAMP_SAMPLE_SIZE, length(amostra))], "T"))
+    length(amostra) > 0 && any(str_detect(amostra[seq_len(min(TIMESTAMP_SAMPLE_SIZE, length(amostra)))], "T"))
   })
-  
+
   cols_ts <- c(cols_ts, cols_ts_conteudo)
-  
+
   # Colunas date: data_ (sem hora) — exclui as que foram identificadas como timestamp
   cols_date <- setdiff(
     nomes[str_detect(nomes, "^data_")],
@@ -108,14 +125,38 @@ converter_tipos <- function(df) {
 
 
 #' Criar tabelas no banco DuckDB com schema tipado e constraints
-#' Executa DDL SQL para cada uma das 13 tabelas, com PRIMARY KEY e FOREIGN KEY.
+#' Executa DDL SQL para cada uma das 15 tabelas, com PRIMARY KEY e FOREIGN KEY.
 #' As tabelas são criadas na ordem correta para respeitar as referências FK.
 #' @param con Conexão DBI ao banco DuckDB.
 criar_tabelas <- function(con) {
 
   ddl <- list(
 
-    # 1. programa (raiz)
+    # 1. uf (referência IBGE — raiz)
+    uf = "
+      CREATE TABLE IF NOT EXISTS uf (
+        codigo_ibge_uf  VARCHAR PRIMARY KEY,
+        nome_uf         VARCHAR,
+        sigla_uf        VARCHAR,
+        nome_regiao     VARCHAR
+      );
+    ",
+
+    # 2. municipio (FK → uf)
+    municipio = "
+      CREATE TABLE IF NOT EXISTS municipio (
+        codigo_ibge     VARCHAR PRIMARY KEY,
+        nome_municipio  VARCHAR,
+        nome_uf         VARCHAR,
+        sigla_uf        VARCHAR,
+        codigo_ibge_uf  VARCHAR,
+        populacao_2022  DOUBLE,
+        pib_2021        DOUBLE,
+        FOREIGN KEY (codigo_ibge_uf) REFERENCES uf(codigo_ibge_uf)
+      );
+    ",
+
+    # 3. programa (raiz Transferegov)
     programa = "
       CREATE TABLE IF NOT EXISTS programa (
         id_programa                                  VARCHAR PRIMARY KEY,
@@ -143,7 +184,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 2. plano_acao (FK → programa)
+    # 4. plano_acao (FK → programa, municipio, uf)
     plano_acao = "
       CREATE TABLE IF NOT EXISTS plano_acao (
         id_plano_acao                                         VARCHAR PRIMARY KEY,
@@ -173,11 +214,15 @@ criar_tabelas <- function(con) {
         valor_custeio_plano_acao                              DOUBLE,
         valor_investimento_plano_acao                         DOUBLE,
         id_programa                                           VARCHAR,
-        FOREIGN KEY (id_programa) REFERENCES programa(id_programa)
+        codigo_ibge_municipio                                 VARCHAR,
+        codigo_ibge_uf                                        VARCHAR,
+        FOREIGN KEY (id_programa) REFERENCES programa(id_programa),
+        FOREIGN KEY (codigo_ibge_municipio) REFERENCES municipio(codigo_ibge),
+        FOREIGN KEY (codigo_ibge_uf) REFERENCES uf(codigo_ibge_uf)
       );
     ",
 
-    # 3. empenho (FK → plano_acao)
+    # 5. empenho (FK → plano_acao, municipio, uf)
     empenho = "
       CREATE TABLE IF NOT EXISTS empenho (
         id_empenho                         VARCHAR PRIMARY KEY,
@@ -207,11 +252,15 @@ criar_tabelas <- function(con) {
         prioridade_desbloqueio_empenho     VARCHAR,
         valor_empenho                      DOUBLE,
         id_plano_acao                      VARCHAR,
-        FOREIGN KEY (id_plano_acao) REFERENCES plano_acao(id_plano_acao)
+        codigo_ibge_municipio              VARCHAR,
+        codigo_ibge_uf                     VARCHAR,
+        FOREIGN KEY (id_plano_acao) REFERENCES plano_acao(id_plano_acao),
+        FOREIGN KEY (codigo_ibge_municipio) REFERENCES municipio(codigo_ibge),
+        FOREIGN KEY (codigo_ibge_uf) REFERENCES uf(codigo_ibge_uf)
       );
     ",
 
-    # 4. relatorio_gestao_novo (FK → plano_acao)
+    # 6. relatorio_gestao_novo (FK → plano_acao)
     relatorio_gestao_novo = "
       CREATE TABLE IF NOT EXISTS relatorio_gestao_novo (
         id_relatorio_gestao_novo              VARCHAR PRIMARY KEY,
@@ -225,7 +274,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 5. executor (FK → plano_acao)
+    # 7. executor (FK → plano_acao)
     executor = "
       CREATE TABLE IF NOT EXISTS executor (
         id_plano_acao                                       VARCHAR,
@@ -249,7 +298,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 6. plano_trabalho (FK → plano_acao)
+    # 8. plano_trabalho (FK → plano_acao)
     plano_trabalho = "
       CREATE TABLE IF NOT EXISTS plano_trabalho (
         id_plano_trabalho                              VARCHAR PRIMARY KEY,
@@ -267,7 +316,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 7. documento_habil (FK → empenho)
+    # 9. documento_habil (FK → empenho)
     documento_habil = "
       CREATE TABLE IF NOT EXISTS documento_habil (
         id_dh                                           VARCHAR PRIMARY KEY,
@@ -297,7 +346,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 8. meta (FK → executor)
+    # 10. meta (FK → executor)
     meta = "
       CREATE TABLE IF NOT EXISTS meta (
         id_executor                            VARCHAR,
@@ -320,7 +369,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 9. finalidade (tabela associativa, sem PK; FK → executor)
+    # 11. finalidade (tabela associativa, sem PK; FK → executor)
     finalidade = "
       CREATE TABLE IF NOT EXISTS finalidade (
         id_executor                      VARCHAR,
@@ -332,7 +381,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 10. plano_trabalho_analise (FK → plano_trabalho)
+    # 12. plano_trabalho_analise (FK → plano_trabalho)
     plano_trabalho_analise = "
       CREATE TABLE IF NOT EXISTS plano_trabalho_analise (
         id_plano_trabalho_analise        VARCHAR PRIMARY KEY,
@@ -349,7 +398,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 11. orgao_analise_pendente (FK → plano_trabalho)
+    # 13. orgao_analise_pendente (FK → plano_trabalho)
     orgao_analise_pendente = "
       CREATE TABLE IF NOT EXISTS orgao_analise_pendente (
         id_analise_pendente             VARCHAR PRIMARY KEY,
@@ -360,7 +409,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 12. ordem_pagamento (FK → documento_habil)
+    # 14. ordem_pagamento (FK → documento_habil)
     ordem_pagamento = "
       CREATE TABLE IF NOT EXISTS ordem_pagamento (
         id_op_ob                                    VARCHAR PRIMARY KEY,
@@ -380,7 +429,7 @@ criar_tabelas <- function(con) {
       );
     ",
 
-    # 13. historico_pagamento (FK → ordem_pagamento)
+    # 15. historico_pagamento (FK → ordem_pagamento)
     historico_pagamento = "
       CREATE TABLE IF NOT EXISTS historico_pagamento (
         id_historico_op_ob               VARCHAR PRIMARY KEY,
@@ -406,22 +455,24 @@ criar_tabelas <- function(con) {
 
 #' Popular tabelas do banco DuckDB a partir de data.frames
 #' Insere os dados na ordem correta para respeitar as constraints de FK.
-#' 
+#'
 #' Esta função valida a presença de tabelas obrigatórias e remove automaticamente
 #' tabelas dependentes quando suas tabelas pai estão ausentes, evitando falhas de FK.
-#' 
+#'
 #' Comportamento:
 #' - Falha imediatamente se tabelas obrigatórias (ex: "programa") estiverem ausentes
 #' - Remove automaticamente tabelas dependentes quando tabelas pai estão faltando
-#' - Exemplo: se "empenho" faltar, "documento_habil", "ordem_pagamento" e 
+#' - Exemplo: se "empenho" faltar, "documento_habil", "ordem_pagamento" e
 #'   "historico_pagamento" são automaticamente removidas para evitar FK órfãs
-#' 
+#'
 #' @param con Conexão DBI ao banco DuckDB.
 #' @param tabelas Lista nomeada de data.frames (saída de ler_csvs_transferegov).
 popular_tabelas <- function(con, tabelas) {
 
   # Ordem de inserção que respeita dependências FK
   ordem_insercao <- c(
+    "uf",
+    "municipio",
     "programa",
     "plano_acao",
     "empenho",
@@ -439,6 +490,8 @@ popular_tabelas <- function(con, tabelas) {
 
   # Mapeamento de dependências: tabela → tabela pai (se houver FK)
   dependencias <- list(
+    uf                      = NULL,
+    municipio               = "uf",
     programa                = NULL,
     plano_acao              = "programa",
     empenho                 = "plano_acao",
@@ -454,11 +507,13 @@ popular_tabelas <- function(con, tabelas) {
     historico_pagamento     = "ordem_pagamento"
   )
 
-  # Tabelas obrigatórias (raiz da hierarquia)
-  obrigatorias <- c("programa")
+  # Tabelas obrigatórias (raízes da hierarquia)
+  obrigatorias <- c("uf", "programa")
 
   # Mapeamento de chave primária por tabela (para deduplicar)
   pk_map <- c(
+    uf                      = "codigo_ibge_uf",
+    municipio               = "codigo_ibge",
     programa                = "id_programa",
     plano_acao              = "id_plano_acao",
     empenho                 = "id_empenho",
@@ -476,17 +531,17 @@ popular_tabelas <- function(con, tabelas) {
 
   # Valida que todas as tabelas esperadas existem nos dados lidos
   faltantes <- setdiff(ordem_insercao, names(tabelas))
-  
+
   # Falha cedo se tabelas obrigatórias estiverem ausentes
   faltantes_obrigatorias <- intersect(faltantes, obrigatorias)
   if (length(faltantes_obrigatorias) > 0) {
     cli::cli_abort(c(
-      "x" = paste("Tabelas obrigatórias ausentes nos CSVs:", 
+      "x" = paste("Tabelas obrigatórias ausentes nos CSVs:",
                   paste(faltantes_obrigatorias, collapse = ", ")),
       "i" = "A carga não pode prosseguir sem as tabelas raiz da hierarquia."
     ))
   }
-  
+
   # Remove tabelas faltantes e suas dependentes
   if (length(faltantes) > 0) {
     # Calcula todas as tabelas que devem ser removidas (faltantes + dependentes)
@@ -499,16 +554,16 @@ popular_tabelas <- function(con, tabelas) {
         filhos_por_pai[[pai]] <- c(filhos_por_pai[[pai]], filho)
       }
     }
-    
+
     tabelas_removidas <- faltantes
     fila_idx <- 1
     fila <- faltantes
-    
+
     # BFS usando índice em vez de remover elementos (evita O(n) por remoção)
     while (fila_idx <= length(fila)) {
       pai_removido <- fila[fila_idx]
       fila_idx <- fila_idx + 1
-      
+
       # Consulta O(1) no índice reverso
       filhos <- filhos_por_pai[[pai_removido]]
       if (!is.null(filhos)) {
@@ -519,12 +574,12 @@ popular_tabelas <- function(con, tabelas) {
         }
       }
     }
-    
+
     cli::cat_line(cli::col_yellow(
       "\u26A0 Tabelas ausentes nos CSVs: ",
       paste(faltantes, collapse = ", ")
     ))
-    
+
     # Se há tabelas dependentes que serão removidas além das faltantes
     dependentes_removidas <- setdiff(tabelas_removidas, faltantes)
     if (length(dependentes_removidas) > 0) {
@@ -533,7 +588,7 @@ popular_tabelas <- function(con, tabelas) {
         paste(dependentes_removidas, collapse = ", ")
       ))
     }
-    
+
     ordem_insercao <- setdiff(ordem_insercao, tabelas_removidas)
   }
 

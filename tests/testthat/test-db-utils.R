@@ -1,5 +1,6 @@
 library(testthat)
-source("tasks/db/src/R/utils.R")
+library(here)
+source(here("tasks/db/src/R/utils.R"))
 
 test_that("converter_tipos converte colunas numéricas com prefixos valor_, vl_, qt_", {
   df <- data.frame(
@@ -9,9 +10,9 @@ test_that("converter_tipos converte colunas numéricas com prefixos valor_, vl_,
     nome = c("A", "B", "C"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_type(resultado$valor_total, "double")
   expect_type(resultado$vl_custeio, "double")
   expect_type(resultado$qt_unidades, "double")
@@ -28,9 +29,9 @@ test_that("converter_tipos converte colunas DATE com prefixo data_ (sem hora)", 
     nome = c("A", "B", "C"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_s3_class(resultado$data_inicio, "Date")
   expect_s3_class(resultado$data_fim, "Date")
   expect_equal(resultado$data_inicio, as.Date(c("2024-01-15", "2024-02-20", "2024-03-25")))
@@ -44,13 +45,13 @@ test_that("converter_tipos converte colunas TIMESTAMP com data_hora_ (ISO 8601 s
     nome = c("A", "B", "C"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_s3_class(resultado$data_hora_criacao, "POSIXct")
   expect_equal(
     resultado$data_hora_criacao,
-    as.POSIXct(c("2024-01-15T10:30:00", "2024-02-20T14:45:30", "2024-03-25T08:15:45"), 
+    as.POSIXct(c("2024-01-15T10:30:00", "2024-02-20T14:45:30", "2024-03-25T08:15:45"),
                format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")
   )
   expect_type(resultado$nome, "character")
@@ -62,13 +63,13 @@ test_that("converter_tipos converte colunas TIMESTAMP com data_hora_ (ISO 8601 c
     nome = c("A", "B", "C"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_s3_class(resultado$data_hora_atualizacao, "POSIXct")
   expect_equal(
     resultado$data_hora_atualizacao,
-    as.POSIXct(c("2024-01-15T10:30:00.123", "2024-02-20T14:45:30.456", "2024-03-25T08:15:45.789"), 
+    as.POSIXct(c("2024-01-15T10:30:00.123", "2024-02-20T14:45:30.456", "2024-03-25T08:15:45.789"),
                format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")
   )
   expect_type(resultado$nome, "character")
@@ -80,13 +81,13 @@ test_that("converter_tipos converte colunas TIMESTAMP com data_e_hora_ (ISO 8601
     nome = c("A", "B"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_s3_class(resultado$data_e_hora_relatorio, "POSIXct")
   expect_equal(
     resultado$data_e_hora_relatorio,
-    as.POSIXct(c("2024-01-15T10:30:00", "2024-02-20T14:45:30.123"), 
+    as.POSIXct(c("2024-01-15T10:30:00", "2024-02-20T14:45:30.123"),
                format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")
   )
   expect_type(resultado$nome, "character")
@@ -98,13 +99,13 @@ test_that("converter_tipos não converte data_hora_ para DATE (deve ser TIMESTAM
     data_teste = c("2024-01-15"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   # data_hora_ deve ser POSIXct, não Date
   expect_s3_class(resultado$data_hora_teste, "POSIXct")
   expect_false(inherits(resultado$data_hora_teste, "Date"))
-  
+
   # data_ (sem hora) deve ser Date
   expect_s3_class(resultado$data_teste, "Date")
 })
@@ -116,9 +117,9 @@ test_that("converter_tipos mantém colunas character quando não há padrão", {
     descricao = c("Texto 1", "Texto 2", "Texto 3"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_type(resultado$nome, "character")
   expect_type(resultado$codigo, "character")
   expect_type(resultado$descricao, "character")
@@ -134,9 +135,9 @@ test_that("converter_tipos lida com múltiplos tipos de colunas simultaneamente"
     qt_items = c("5", "10", "15"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_type(resultado$id, "character")
   expect_type(resultado$valor_total, "double")
   expect_s3_class(resultado$data_inicio, "Date")
@@ -152,9 +153,9 @@ test_that("converter_tipos lida com valores NA corretamente", {
     data_hora_criacao = c("2024-01-15T10:30:00", NA, "2024-03-25T08:15:45"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_type(resultado$valor_total, "double")
   expect_true(is.na(resultado$valor_total[2]))
   expect_s3_class(resultado$data_inicio, "Date")
@@ -170,10 +171,27 @@ test_that("converter_tipos preserva estrutura do dataframe", {
     data_teste = c("2024-01-01", "2024-02-01"),
     stringsAsFactors = FALSE
   )
-  
+
   resultado <- converter_tipos(df)
-  
+
   expect_equal(nrow(resultado), 2)
   expect_equal(ncol(resultado), 3)
   expect_equal(names(resultado), c("valor_a", "nome", "data_teste"))
+})
+
+test_that("converter_tipos converte colunas numéricas com prefixos populacao_ e pib_", {
+  df <- data.frame(
+    populacao_2022 = c("51990", "2312", "16976"),
+    pib_2021 = c("1234567890", "39801594", "127927329"),
+    nome = c("A", "B", "C"),
+    stringsAsFactors = FALSE
+  )
+
+  resultado <- converter_tipos(df)
+
+  expect_type(resultado$populacao_2022, "double")
+  expect_type(resultado$pib_2021, "double")
+  expect_equal(resultado$populacao_2022, c(51990, 2312, 16976))
+  expect_equal(resultado$pib_2021, c(1234567890, 39801594, 127927329))
+  expect_type(resultado$nome, "character")
 })
