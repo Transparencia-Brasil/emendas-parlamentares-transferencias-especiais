@@ -28,21 +28,26 @@ usethis::use_git_ignore(TMP_DIR) # muito grande!
 
 
 # FTP --------------------------------------------------------------------------
-URL_BASE <- "https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2022/Brasil/BR"
+ANO <- 2024
 
-MUNICS_ZIPFILE_FTP <- str_glue("{URL_BASE}/BR_Municipios_2022.zip")
-UFS_ZIPFILE_FTP <- str_glue("{URL_BASE}/BR_UF_2022.zip")
+URL_BASE <- str_glue(
+  "https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_{ANO}/Brasil/",
+  if_else(ANO <= 2022, "BR", "")
+)
+
+MUNICS_ZIPFILE_FTP <- str_glue("{URL_BASE}/BR_Municipios_{ANO}.zip")
+UFS_ZIPFILE_FTP <- str_glue("{URL_BASE}/BR_UF_{ANO}.zip")
 
 
 # ZIPFILES ---------------------------------------------------------------------
-MUNICS_ZIPFILE_LOCAL <- str_glue("{TMP_DIR}/BR_Municipios_2022.zip")
-UFS_ZIPFILE_LOCAL <- str_glue("{TMP_DIR}/BR_UF_2022.zip")
+MUNICS_ZIPFILE_LOCAL <- str_glue("{TMP_DIR}/BR_Municipios_{ANO}.zip")
+UFS_ZIPFILE_LOCAL <- str_glue("{TMP_DIR}/BR_UF_{ANO}.zip")
 
 
 # SHP --------------------------------------------------------------------------
 # shapefiles originais
-MUNICS_SHP <- str_glue("{TMP_DIR}/BR_Municipios_2022.shp")
-UFS_SHP <- str_glue("{TMP_DIR}/BR_UF_2022.shp")
+MUNICS_SHP <- str_glue("{TMP_DIR}/BR_Municipios_{ANO}.shp")
+UFS_SHP <- str_glue("{TMP_DIR}/BR_UF_{ANO}.shp")
 
 
 # RDS --------------------------------------------------------------------------
@@ -60,7 +65,6 @@ download.file(
   destfile = MUNICS_ZIPFILE_LOCAL,
   mode = "wb"
 )
-
 
 download.file(
   url = UFS_ZIPFILE_FTP,
@@ -105,7 +109,6 @@ munics <- munics %>%
 munics_ids <- munics %>%
   select(-geometry)
 
-
 # somente atributos espaciais das ufs, pois a única finalidade é fazer mapas
 ufs <- ufs %>%
   as_tibble() %>%
@@ -113,7 +116,7 @@ ufs <- ufs %>%
     codigo_uf = CD_UF,
     nome_uf = NM_UF,
     uf = SIGLA_UF,
-    nome_regiao = NM_REGIAO,
+    nome_regiao = NM_REGIA,
     geometry = geometry
   )
 
