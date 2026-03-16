@@ -183,3 +183,11 @@ data.table::fwrite(
   row.names = FALSE,
   quote = TRUE
 )
+
+munics |>
+  select(-geometry) |>
+  write_csv(str_glue("{OUTPUT_DIR}/municipios.csv"))
+
+ufs |>
+  select(-geometry) |>
+  write_csv(str_glue("{OUTPUT_DIR}/uf.csv"))
