@@ -48,5 +48,5 @@ tasks/transferegov/outputs/old/*
 tasks/transferegov/outputs/old2025/*
 tasks/transferegov/tmp/*
 tasks/db/outputs/*.duckdb
-tasks/malhas-municipais/outputs/*
+tasks/malhas-municipais/outputs/*.rds
 tasks/malhas-municipais/tmp/*
