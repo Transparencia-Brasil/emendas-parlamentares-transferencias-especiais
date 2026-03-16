@@ -1,10 +1,15 @@
 library(tidyverse)
 library(here)
+library(sf)
 options(width = 150)
 
 # :: FILEPATHS -----------------------------------------------------------------
 
+UTILS <- here("tasks/db/src/R/utils.R")
+source(UTILS)
+
 TASK <- "tasks/malhas-municipais"
+
 OUTPUT_DIR <- here(TASK, "outputs")
 
 # malha de municípíos e ufs em rds - resultado
@@ -18,14 +23,11 @@ MUNICS_IDS_RDS <- str_glue("{OUTPUT_DIR}/municipios.rds")
 # :: LEITURA -------------------------------------------------------------------
 
 # shp2rds
-
 munics <- readRDS(MUNICS_RDS)
 ufs <- readRDS(UFS_RDS)
 
 
 # :: BENEFICIÁRIOS -------------------------------------------------------------
-
-source(here("tasks/db/src/R/utils.R"))
 
 cli::cat_rule("Lendo CSVs de tasks/transferegov/outputs/")
 tabelas <- ler_csvs_transferegov()
@@ -35,6 +37,18 @@ beneficiarios <- tabelas$plano_acao |>
   distinct()
 
 
+# :: ETL -----------------------------------------------------------------------
+
+#' Gera chave normalizada para município ou UF
+#'
+#' @param nome Nome do município ou estado
+#' @param uf Sigla da UF
+#'
+#' @return Chave normalizada em minúsculas com caracteres especiais removidos
+#'
+#' @examples
+#' make_key("São Paulo", "SP")
+#'
 make_key <- function(nome, uf) {
   key <- nome |>
     str_to_lower() |>
@@ -66,7 +80,11 @@ make_key <- function(nome, uf) {
     str_replace("cerro-cora", "cerro cora") |>
     str_replace("brasopolis", "brazopolis")
 
-    key <- str_glue("{key}-{uf}")
+    key <- if_else(
+      str_detect(key, "estado d[eoa]"),
+      str_glue("{uf}"),
+      str_glue("{key}-{uf}")
+    )
 
     key <- key |>
       str_replace("presidente juscelino-RN", "serra caiada-RN") |>
@@ -83,6 +101,7 @@ make_key <- function(nome, uf) {
     key
 }
 
+# gera chave normalizada para município ou UF
 benef <- beneficiarios |>
   mutate(
     .before = everything(),
@@ -90,20 +109,77 @@ benef <- beneficiarios |>
   ) |>
   select(
     key,
-    nome_beneficiario_plano_acao,
-    cnpj_beneficiario_plano_acao
+    cnpj_beneficiario = cnpj_beneficiario_plano_acao
   )
 
+# gera chave normalizada para município
 mun <- munics |>
-    mutate(
-      .before = everything(),
-      key = make_key(nome_municipio, uf)
-    ) |>
-    select(
-      key,
-      codigo_ibge,
-      nome_municipio
-    )
+  mutate(
+    .before = everything(),
+    key = make_key(nome_municipio, sigla_uf)
+  ) |>
+  select(
+    key,
+    codigo_ibge_municipio = codigo_ibge,
+    codigo_ibge_uf
+  )
 
-left_join(benef, mun)
-left_join(benef, mun)
+# gera chave normalizada para uf
+uf <- ufs |>
+  select(
+    key = sigla_uf,
+    codigo_ibge_uf
+  )
+
+# associa beneficiários a municípios ou ufs, conforme chave normalizada
+benef <- benef |>
+  mutate(
+    territorialidade = case_when(
+      key %in% mun$key ~ "municipio",
+      key %in% uf$key ~ "uf",
+      TRUE ~ "desconecido"
+    )
+  ) |>
+  nest(.by = territorialidade) |>
+  mutate(
+    data = if_else(
+      territorialidade == "municipio",
+      map(data, ~ left_join(.x, mun)),
+      map(data, ~ left_join(.x, uf))
+    )
+  ) |>
+  unnest(data) |>
+  select(-territorialidade, -key)
+
+# associa beneficiários a municípios ou ufs nas tabelas de plano de ação e empenho
+tabelas$plano_acao <- tabelas$plano_acao |>
+  left_join(benef, by = c("cnpj_beneficiario_plano_acao" = "cnpj_beneficiario"))
+
+tabelas$empenho <- tabelas$empenho |>
+  left_join(benef, by = c("cnpj_beneficiario_empenho" = "cnpj_beneficiario"))
+
+
+# :: SALVA ---------------------------------------------------------------------
+
+# salva tabelas atualizadas
+CSV_PLANO_ACAO <- str_glue("{CSV_DIR}/02-plano-acao.csv")
+CSV_EMPENHO <- str_glue("{CSV_DIR}/03-empenho.csv")
+
+tabelas$plano_acao |> glimpse()
+tabelas$empenho |> glimpse()
+
+data.table::fwrite(
+  tabelas$plano_acao,
+  CSV_PLANO_ACAO,
+  sep = ",",
+  row.names = FALSE,
+  quote = TRUE
+)
+
+data.table::fwrite(
+  tabelas$empenho,
+  CSV_EMPENHO,
+  sep = ",",
+  row.names = FALSE,
+  quote = TRUE
+)
