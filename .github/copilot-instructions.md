@@ -126,13 +126,13 @@ Os CSVs são salvos primeiro em `tasks/transferegov/tmp/` (ignorado pelo Git) e 
 
 Cadastro dos **programas de transferências especiais**. Contém o órgão responsável, modalidade, período de ciência e valores financeiros agregados (disponibilizado, impedido, a disponibilizar). Chave primária: `id_programa`.
 
-### 02-plano-acao.csv (27 colunas)
+### 02-plano-acao.csv (29 colunas)
 
-**Planos de ação** vinculados a emendas parlamentares. Cada linha é uma emenda endereçada a um beneficiário (município/estado). Contém dados do parlamentar autor, área de política pública, dados bancários, valores de custeio e investimento, e situação (CIENTE/IMPEDIDO). FK: `id_programa`.
+**Planos de ação** vinculados a emendas parlamentares. Cada linha é uma emenda endereçada a um beneficiário (município/estado). Contém dados do parlamentar autor, área de política pública, dados bancários, valores de custeio e investimento, situação (CIENTE/IMPEDIDO) e códigos IBGE do município e UF do beneficiário. FK: `id_programa`. FK: `codigo_ibge_municipio` → `municipio`. FK: `codigo_ibge_uf` → `uf`.
 
-### 03-empenho.csv (27 colunas)
+### 03-empenho.csv (29 colunas)
 
-**Notas de empenho orçamentário**. Classificação orçamentária completa (natureza de despesa, fonte, PTRES, grupo, subitem), UG emitente, beneficiário, situação e valor empenhado. FK: `id_plano_acao`.
+**Notas de empenho orçamentário**. Classificação orçamentária completa (natureza de despesa, fonte, PTRES, grupo, subitem), UG emitente, beneficiário, situação, valor empenhado e códigos IBGE do município e UF do beneficiário. FK: `id_plano_acao`. FK: `codigo_ibge_municipio` → `municipio`. FK: `codigo_ibge_uf` → `uf`.
 
 ### 04-documento-habil.csv (23 colunas)
 
@@ -179,9 +179,14 @@ Cadastro dos **programas de transferências especiais**. Contém o órgão respo
 ## Modelo relacional das tabelas
 
 ```
+# Tabelas de referência IBGE
+uf ...................... PK(codigo_ibge_uf)
+municipio ............... PK(codigo_ibge)    FK(codigo_ibge_uf → uf)
+
+# Tabelas do Transferegov
 01-programa
-  └── 02-plano-acao ............... [id_programa]
-        ├── 03-empenho ............ [id_plano_acao]
+  └── 02-plano-acao ............... [id_programa, codigo_ibge_municipio → municipio, codigo_ibge_uf → uf]
+        ├── 03-empenho ............ [id_plano_acao, codigo_ibge_municipio → municipio, codigo_ibge_uf → uf]
         │     └── 04-documento-habil [id_empenho]
         │           └── 05-ordem-pagamento [id_dh]
         │                 └── 06-historico-pagamento [id_op_ob]
@@ -196,6 +201,7 @@ Cadastro dos **programas de transferências especiais**. Contém o órgão respo
 
 - A **cadeia financeira** segue: programa → plano de ação → empenho → documento hábil → ordem de pagamento → histórico.
 - A **cadeia de execução** segue: plano de ação → executor → metas + finalidades; plano de ação → plano de trabalho → análises.
+- As tabelas **uf** e **municipio** (IBGE) são referenciadas por `plano_acao` e `empenho` via `codigo_ibge_municipio` e `codigo_ibge_uf`.
 - Todas as colunas são lidas como `character` por padrão. Conversões numéricas e de data devem ser feitas explicitamente no momento da análise.
 
 ---
@@ -226,11 +232,12 @@ Cadastro dos **programas de transferências especiais**. Contém o órgão respo
 | Task                              | Descrição                                                                                         |
 | --------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `transferegov/`                   | Coleta dados da API e salva CSVs. Ponto de partida para todas as análises.                        |
+| `db/`                             | Cria banco DuckDB local com as 15 tabelas (13 Transferegov + 2 IBGE), constraints PK/FK e tipos.  |
 | `analise-exploratoria/`           | Exploração e totalização dos dados coletados. Gera relatórios Quarto.                             |
 | `analise-plano-de-trabalho/`      | Análise detalhada dos planos de trabalho (elemento de despesa, localização, público, prazo etc.). |
 | `classificacao-natureza-despesa/` | Classificação de natureza de despesa com apoio de LLMs. Contém prompts em `prompts/`.             |
 | `analise-classificacoes-gpt5/`    | Avaliação dos resultados das classificações feitas por LLMs.                                      |
-| `malhas-municipais/`              | Dados geográficos de municípios (malhas IBGE).                                                    |
+| `malhas-municipais/`              | Dados geográficos de municípios e UFs (IBGE). Inclui população e PIB.                             |
 | `sidra-ibge/`                     | Dados socioeconômicos do SIDRA/IBGE.                                                              |
 
 ### Criando uma nova task
