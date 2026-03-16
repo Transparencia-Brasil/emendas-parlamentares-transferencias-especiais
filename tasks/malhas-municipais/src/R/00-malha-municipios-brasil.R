@@ -23,8 +23,8 @@ dir.create(TMP_DIR)
 dir.create(OUTPUT_DIR)
 
 # inclui arquivos brutos em .gitignore
-usethis::use_git_ignore(OUTPUT_DIR) # muito grande!
-usethis::use_git_ignore(TMP_DIR) # muito grande!
+# usethis::use_git_ignore(OUTPUT_DIR) # muito grande!
+# usethis::use_git_ignore(TMP_DIR) # muito grande!
 
 
 # FTP --------------------------------------------------------------------------
@@ -93,15 +93,18 @@ unzip(
 munics <- read_sf(MUNICS_SHP)
 ufs <- read_sf(UFS_SHP)
 
+
 # :: TRANSFORMA ================================================================
 
 # essa versão mantém atributos espaciais (para fazer mapas)
 munics <- munics %>%
   as_tibble() %>%
   transmute(
-    codigo_ibge = CD_MUN,
-    nome_municipio = NM_MUN,
-    uf = SIGLA_UF,
+    codigo_ibge = as.character(CD_MUN),
+    nome_municipio = as.character(NM_MUN),
+    nome_uf = as.character(NM_UF),
+    sigla_uf = as.character(SIGLA_UF),
+    codigo_ibge_uf = as.character(CD_UF),
     geometry = geometry
   )
 
@@ -113,10 +116,10 @@ munics_ids <- munics %>%
 ufs <- ufs %>%
   as_tibble() %>%
   transmute(
-    codigo_uf = CD_UF,
-    nome_uf = NM_UF,
-    uf = SIGLA_UF,
-    nome_regiao = NM_REGIA,
+    codigo_ibge_uf = as.character(CD_UF),
+    nome_uf = as.character(NM_UF),
+    sigla_uf = as.character(SIGLA_UF),
+    nome_regiao = as.character(NM_REGIA),
     geometry = geometry
   )
 
