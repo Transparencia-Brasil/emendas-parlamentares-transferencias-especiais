@@ -87,7 +87,7 @@ converter_tipos <- function(df) {
   # Verifica conteúdo de cada coluna candidata
   cols_ts_conteudo <- purrr::keep(cols_data_candidatas, \(col) {
     amostra <- df[[col]][!is.na(df[[col]])]
-    length(amostra) > 0 && any(str_detect(amostra[1:min(TIMESTAMP_SAMPLE_SIZE, length(amostra))], "T"))
+    length(amostra) > 0 && any(str_detect(amostra[seq_len(min(TIMESTAMP_SAMPLE_SIZE, length(amostra)))], "T"))
   })
   
   cols_ts <- c(cols_ts, cols_ts_conteudo)
