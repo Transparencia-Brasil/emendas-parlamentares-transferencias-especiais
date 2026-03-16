@@ -1,5 +1,6 @@
 library(testthat)
-source("tasks/transferegov/src/R/utils.R")
+library(here)
+source(here("tasks/transferegov/src/R/utils.R"))
 
 test_that("build_transferegov_params creates expected tibble", {
   tmp_input <- tempfile(fileext = ".csv")
