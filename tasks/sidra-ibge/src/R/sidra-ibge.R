@@ -1,3 +1,8 @@
+library(tidyverse)
+library(httr2)
+library(here)
+
+
 # POPULACAO RESIDENTE 2022 ======================================================
 
 populacao_ibge_sidra <- "https://apisidra.ibge.gov.br/values/t/9514/n6/all/v/allxp/p/all/c2/6794/c287/100362/c286/113635"
@@ -23,7 +28,7 @@ populacao_ibge <- populacao_ibge_sidra %>%
     populacao_2022 = as.integer(Valor)
   )
 
-# PIB MUNICIPIOS 2021 ==========================================================
+# PIB MUNICIPIOS 2023 ==========================================================
 
 pib_ibge_sidra <- "https://apisidra.ibge.gov.br/values/t/5938/n6/all/v/37/p/last%201/d/v37%203"
 
@@ -47,3 +52,18 @@ pib_ibge <- pib_ibge_sidra %>%
     codigo_ibge = `Município (Código)`,
     pib_2021 = as.numeric(Valor) * 1000
   )
+
+# ASSOCIA PIB E POPULAÇÃO A MUNICÍPIOS =========================================
+
+UTILS <- here("tasks/db/src/R/utils.R")
+source(UTILS)
+
+OUTPUT_FILE <- here("tasks/malhas-municipais/outputs/municipios.csv")
+
+read_csv(
+  OUTPUT_FILE,
+  col_types = cols(.default = col_character())
+) |>
+  left_join(populacao_ibge, by = "codigo_ibge") |>
+  left_join(pib_ibge, by = "codigo_ibge") |>
+  write_csv(OUTPUT_FILE)
